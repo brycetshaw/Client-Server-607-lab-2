@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Server {
 
@@ -13,53 +15,55 @@ public class Server {
     private PrintWriter socketOut;
     private BufferedReader socketIn;
 
+    private ExecutorService pool;
+
     public Server() {
         try {
-            serverSocket = new ServerSocket(8099);
+            serverSocket = new ServerSocket(9898);
+            pool = Executors.newFixedThreadPool(2);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+
     }
 
-    public static void main(String[] args) throws IOException {
 
-        Server myServer = new Server();
-        try {
-            // accepting the connection
-            myServer.aSocket = myServer.serverSocket.accept();
-            System.out.println("Connection accepted by server!");
-            myServer.socketIn = new BufferedReader(new InputStreamReader(myServer.aSocket.getInputStream()));
-            myServer.socketOut = new PrintWriter((myServer.aSocket.getOutputStream()), true);
+    public void runServer () {
 
-            Capitalizer cap1 = new Capitalizer (myServer.socketIn, myServer.socketOut);
-            //Creating a thread for a client
-            Thread t1 = new Thread (cap1);
-            t1.start();
+        try{
 
-            // accepting the connection
-            myServer.aSocket = myServer.serverSocket.accept();
-            System.out.println("Connection accepted by server!");
-            myServer.socketIn = new BufferedReader(new InputStreamReader(myServer.aSocket.getInputStream()));
-            myServer.socketOut = new PrintWriter((myServer.aSocket.getOutputStream()), true);
+            while (true) {
+                aSocket = serverSocket.accept();
+                System.out.println("Connection accepted!");
+                socketIn = new BufferedReader(new InputStreamReader(aSocket.getInputStream()));
+                socketOut = new PrintWriter(aSocket.getOutputStream(), true);
 
-            Capitalizer cap2 = new Capitalizer (myServer.socketIn, myServer.socketOut);
-            //Creating a thread for a client
-            Thread t2 = new Thread (cap2);
-            t2.start();
-
-            try {
-                t1.join();
-                t2.join();
-            }catch (InterruptedException e) {
-                System.out.println("Thread Error!");
+                Palendromer palendromer = new Palendromer(socketIn, socketOut);
+                pool.execute(palendromer);
             }
-
-            myServer.socketIn.close();
-            myServer.socketOut.close();
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+
+
+        try {
+
+            // TODO how do we reach this unreachable code?
+            System.out.println("Shutting down!");
+            socketOut.close();
+            socketIn.close();
+
+            pool.shutdown();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+    public static void main(String[] args) {
 
+        Server myServer = new Server();
+        myServer.runServer();
+
+    }
 }

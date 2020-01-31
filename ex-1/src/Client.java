@@ -10,7 +10,7 @@ public class Client {
     private BufferedReader stdIn;
     private BufferedReader socketIn;
 
-    public Client(String serverName, int portNumber) {
+    protected Client(String serverName, int portNumber) {
         try {
             palinSocket = new Socket(serverName, portNumber);
             stdIn = new BufferedReader(new InputStreamReader(System.in));
@@ -18,11 +18,11 @@ public class Client {
                     palinSocket.getInputStream()));
             socketOut = new PrintWriter((palinSocket.getOutputStream()), true);
         } catch (IOException e) {
-            System.err.println(e.getStackTrace());
+            System.err.println(e.getStackTrace().toString());
         }
     }
 
-    public void communicate() {
+    private void communicate() {
 
         String line = "";
         String response = "";
@@ -31,14 +31,13 @@ public class Client {
             try {
                 System.out.println("please enter a word: ");
                 line = stdIn.readLine();
-                if (!line.equals("QUIT")) {
-                    System.out.println(line);
+
+
                     socketOut.println(line);
                     response = socketIn.readLine();
-                    System.out.println(response);
-                } else {
-                    running = false;
-                }
+                System.out.println(response);
+                running = !response.equals("Good Bye!");
+
 
             } catch (IOException e) {
                 System.out.println("Sending error: " + e.getMessage());
@@ -54,8 +53,8 @@ public class Client {
 
     }
 
-    public static void main(String[] args) throws IOException {
-        Client aClient = new Client("localhost", 8099);
+    public static void main(String[] args) {
+        Client aClient = new Client("localhost", 9898);
         aClient.communicate();
     }
 }
