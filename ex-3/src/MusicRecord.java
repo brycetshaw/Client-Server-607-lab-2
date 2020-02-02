@@ -1,8 +1,11 @@
+import java.io.Serializable;
 
 /**
  * A simple class that represents a music record
  */
-class MusicRecord {
+class MusicRecord implements Serializable {
+
+    private static final long serialVersionUID = 1;
     private int year_recorded;
     private String songName;
     private String singerName;
@@ -84,5 +87,10 @@ class MusicRecord {
      */
     public double getPurchasePrice() {
         return purchase_price;
+    }
+
+    @Override
+    public String toString(){
+        return year_recorded + ", " + songName + ", " + singerName + ", $" + purchase_price + "";
     }
 }

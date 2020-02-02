@@ -4,12 +4,7 @@
  * Completed by: STUDENT(S) NAME
  */
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.NoSuchElementException;
+import java.io.*;
 import java.util.Scanner;
 
 public class WriteRecord {
@@ -48,6 +43,12 @@ public class WriteRecord {
      * @param textFileName name of text file to open
      */
     public void openFileInputStream(String textFileName) {
+        File file = new File(textFileName);
+        try {
+            textFileIn = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         // TO BE COMPLETED BY THE STUDENTS
     }
@@ -59,7 +60,11 @@ public class WriteRecord {
      */
     public void openObjectOutputStream(String objectFileName) {
 
-        // TO BE COMPLETED BY THE STUDENTS
+        try {
+            objectOut = new ObjectOutputStream(new FileOutputStream(objectFileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -85,7 +90,17 @@ public class WriteRecord {
             System.out.println(price + "  ");    // echo data read from text file
 
             setRecord(year, songName, singerName, price);
-            textFileIn.nextLine();   // read the dashed lines and do nothing
+            textFileIn.nextLine();
+            System.out.println(record.toString());// read the dashed lines and do nothing
+
+
+            try {
+                objectOut.writeObject(record);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+           record = new MusicRecord();
 
             // THE REST OF THE CODE TO BE COMPLETED BY THE STUDENTS
         }

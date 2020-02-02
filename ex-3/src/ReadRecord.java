@@ -34,22 +34,27 @@ public class ReadRecord {
 
         try {
             while (true) {
+                record = (MusicRecord) input.readObject();
+                System.out.println(record.toString());
 
-
-                // TO BE COMPLETED BY THE STUDENTS
 
 
             }   // END OF WHILE
-        } catch (Exception e) {
+        }catch (IOException eof) {
+            System.out.println("end of file!");
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        // ADD NECESSARY catch CLAUSES HERE
-
-    }           // END OF METHOD 
 
 
-    public static void main(String[] args) {
+    }
+
+
+    public static void main(String[] args) throws IOException {
+        String current = new java.io.File( "." ).getCanonicalPath();
+        System.out.println("Current dir:"+current);
         ReadRecord d = new ReadRecord();
         d.readObjectsFromFile("mySongs.ser");
+
     }
 }
