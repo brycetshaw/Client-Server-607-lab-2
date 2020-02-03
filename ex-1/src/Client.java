@@ -4,12 +4,21 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * The type Client.
+ */
 public class Client {
     private PrintWriter socketOut;
     private Socket palinSocket;
     private BufferedReader stdIn;
     private BufferedReader socketIn;
 
+    /**
+     * Instantiates a new Client.
+     *
+     * @param serverName the server name
+     * @param portNumber the port number
+     */
     protected Client(String serverName, int portNumber) {
         try {
             palinSocket = new Socket(serverName, portNumber);
@@ -22,8 +31,10 @@ public class Client {
         }
     }
 
+    /**
+     * Communicate with the server to take in input from the user and get the proper output
+     */
     private void communicate() {
-
         String line = "";
         String response = "";
         boolean running = true;
@@ -31,14 +42,10 @@ public class Client {
             try {
                 System.out.println("please enter a word: ");
                 line = stdIn.readLine();
-
-
                     socketOut.println(line);
                     response = socketIn.readLine();
                 System.out.println(response);
                 running = !response.equals("Good Bye!");
-
-
             } catch (IOException e) {
                 System.out.println("Sending error: " + e.getMessage());
             }
@@ -53,6 +60,11 @@ public class Client {
 
     }
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         Client aClient = new Client("localhost", 9898);
         aClient.communicate();

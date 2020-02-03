@@ -5,12 +5,22 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * The type Date client.
+ */
 public class DateClient {
     private PrintWriter socketOut;
     private Socket aSocket;
     private BufferedReader stdIn;
     private BufferedReader socketIn;
 
+    /**
+     * Instantiates a new Date client.
+     *
+     * @param serverName the server name
+     * @param portNumber the port number
+     * @throws IOException the io exception
+     */
     protected DateClient(String serverName, int portNumber) throws IOException {
 
         aSocket = new Socket(serverName, portNumber);
@@ -21,7 +31,6 @@ public class DateClient {
     }
 
     private void communicate() {
-
         String line = "";
         String response = "";
         boolean running = true;
@@ -29,7 +38,6 @@ public class DateClient {
             try {
                 System.out.println("Please select an Option (DATE/TIME) ");
                 line = stdIn.readLine();
-
 
                 socketOut.println(line);
                 if (line.equals("QUIT")) {
@@ -52,15 +60,18 @@ public class DateClient {
 
     }
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         boolean hasConnected = false;
         while (!hasConnected) {
-
             try {
                 DateClient aClient = new DateClient("localhost", 9090);
                 aClient.communicate();
                 hasConnected = true;
-
 
             } catch (IOException e) {
                 System.out.println("Connection Failed. Retrying connection in 2s");

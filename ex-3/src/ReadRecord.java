@@ -36,25 +36,18 @@ public class ReadRecord {
             while (true) {
                 record = (MusicRecord) input.readObject();
                 System.out.println(record.toString());
-
-
-
             }   // END OF WHILE
         }catch (IOException eof) {
             System.out.println("end of file!");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
-
     }
-
 
     public static void main(String[] args) throws IOException {
         String current = new java.io.File( "." ).getCanonicalPath();
         System.out.println("Current dir:"+current);
         ReadRecord d = new ReadRecord();
-        d.readObjectsFromFile("mySongs.ser");
-
+        d.readObjectsFromFile("allSongs.ser");
     }
 }

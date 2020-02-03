@@ -2,12 +2,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * The type Palendromer.
+ */
 public class Palendromer implements Runnable {
 
     private PrintWriter socketOut;
 
     private BufferedReader socketIn;
 
+    /**
+     * Instantiates a new Palendromer.
+     *
+     * @param in  the in
+     * @param out the out
+     */
     protected Palendromer(BufferedReader in, PrintWriter out) {
         socketIn = in;
         socketOut = out;
@@ -15,7 +24,6 @@ public class Palendromer implements Runnable {
 
     @Override
     public void run() {
-        // TODO Auto-generated method stub
         String line = "";
         while (true) {
             try {
@@ -25,10 +33,9 @@ public class Palendromer implements Runnable {
                     socketOut.println(line);
                     break;
                 }
-                socketOut.println(line + (isPalindrome(line)?" is":" is NOT") + " a palindrome");
+                socketOut.println(line + (isPalindrome(line) ? " is" : " is NOT") + " a palindrome");
 
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -37,7 +44,6 @@ public class Palendromer implements Runnable {
 
 
     private boolean isPalindrome(String line) {
-
         for (int i = 0; i < line.length() / 2; i++) {
             if (line.charAt(i) != line.charAt(line.length() - i - 1)) {
                 return false;

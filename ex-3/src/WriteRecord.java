@@ -49,8 +49,6 @@ public class WriteRecord {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-        // TO BE COMPLETED BY THE STUDENTS
     }
 
     /**
@@ -90,22 +88,17 @@ public class WriteRecord {
             System.out.println(price + "  ");    // echo data read from text file
 
             setRecord(year, songName, singerName, price);
-            textFileIn.nextLine();
-            System.out.println(record.toString());// read the dashed lines and do nothing
-
+            textFileIn.nextLine(); // read the dashed lines and do nothing
 
             try {
                 objectOut.writeObject(record);
+                objectOut.reset();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-           record = new MusicRecord();
-
-            // THE REST OF THE CODE TO BE COMPLETED BY THE STUDENTS
         }
 
-        // YOUR CODE GOES HERE
     }
 
     public static void main(String[] args) throws IOException {

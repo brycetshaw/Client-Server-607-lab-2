@@ -7,8 +7,10 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * The type Server.
+ */
 public class Server {
-
 
     private Socket aSocket;
     private ServerSocket serverSocket;
@@ -17,22 +19,35 @@ public class Server {
 
     private ExecutorService pool;
 
+    /**
+     * Instantiates a new Server with a thread pool with fixed thread amounts.
+     */
     public Server() {
         try {
             serverSocket = new ServerSocket(9898);
             pool = Executors.newFixedThreadPool(2);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
     }
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
+    public static void main(String[] args) {
+        Server myServer = new Server();
+        myServer.runServer();
+    }
 
-    public void runServer () {
-
-        try{
-
+    /**
+     * Run server by accepting a connection, instantiating the input and output streams, and calling the palindrome class.
+     * If an IO exception occurs, then close the streams and the socket
+     */
+    public void runServer() {
+        try {
             while (true) {
                 aSocket = serverSocket.accept();
                 System.out.println("Connection accepted!");
@@ -46,10 +61,7 @@ public class Server {
             e.printStackTrace();
         }
 
-
         try {
-
-            // TODO how do we reach this unreachable code?
             System.out.println("Shutting down!");
             socketOut.close();
             socketIn.close();
@@ -59,11 +71,5 @@ public class Server {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    public static void main(String[] args) {
-
-        Server myServer = new Server();
-        myServer.runServer();
-
     }
 }
