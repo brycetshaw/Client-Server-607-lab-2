@@ -6,7 +6,7 @@
 - ex-1
 - ex-2
 - ex-3
-- FinalClientManagementSystem.png
+- ex-6/part-1 -> FinalClientManagementSystem.png
 
 ### Incomplete parts:
 - Everything else
