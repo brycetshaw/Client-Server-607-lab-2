@@ -1,4 +1,6 @@
-package Model;
+package Server.Model;
+
+import Server.Server;
 
 /**
  * Sets the game markers.
