@@ -1,10 +1,8 @@
 package Client.Controller;
 
-import Client.Client;
-import Client.Model.*;
+import Model.*;
 import Client.View.*;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -44,13 +42,13 @@ public class Controller {
 
             theView.sendRequest("Welcome to tic tak toe. what is your name?");
             name = theView.getResponse();
-            theBoard = (Board) objectInputStream.readObject();
+            theBoard = (Board) readIn(objectInputStream);
 
 
             mark = theGame.addPlayer(theBoard, name);
             theView.sendRequest("hi " + name + ". You are" +
                     " playing as " + mark + "\n");
-            objectOutputStream.writeObject(theBoard);
+            writeOut(theBoard, objectOutputStream);
 
 
         } catch (IOException | ClassNotFoundException e) {
@@ -61,7 +59,7 @@ public class Controller {
     private void playGame() {
         try {
             while (true) {
-                theBoard = (Board) objectInputStream.readObject();
+                theBoard = (Board) readIn(objectInputStream);
                 theView.sendRequest(theGame.display(theBoard));
                 if(theGame.checkWinner(theBoard, mark)){
                     theBoard.setRunning(false);
@@ -83,11 +81,20 @@ public class Controller {
 
                 } while (!moveIsValid);
 
-                objectOutputStream.writeObject(theBoard);
+                writeOut(theBoard,objectOutputStream);
 
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
+
+    private Object readIn(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        return ois.readObject();
+    }
+
+    private static void writeOut(java.io.Serializable obj, ObjectOutputStream oos) throws IOException {
+        oos.writeObject(obj);
+    }
+
 }

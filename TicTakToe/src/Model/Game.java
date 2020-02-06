@@ -1,10 +1,9 @@
-package Client.Model;
+package Model;
 
-import Server.Model.Constants;
 
-public class Game {
+public class Game implements Constants{
 
-    public static char addPlayer(Client.Model.Board theBoard, String readLine) {
+    public static char addPlayer(Model.Board theBoard, String readLine) {
         if (theBoard.getxPlayer() == null) {
             theBoard.setxPlayer(readLine);
             return Constants.LETTER_X;
@@ -65,12 +64,14 @@ public class Game {
     public static boolean makeMove(Board theBoard, char mark, int[] move) {
         char[][] gameState = theBoard.getTheBoard();
         try{
-            if (gameState[move[0]][move[1]] == Constants.SPACE_CHAR ){
-                System.out.println(gameState[move[0]][move[1]]+ " == " + Constants.SPACE_CHAR );
+            System.out.println(Character.getNumericValue( gameState[move[0]][move[1]] )+ " == " + Character.getNumericValue(gameState[move[0]][move[1]]) );
+            if (gameState[move[0]][move[1]] == Constants.SPACE_CHAR){
+
                 gameState[move[0]][move[1]] = mark;
                 theBoard.setTheBoard(gameState);
                 return true;
             }
+            System.out.println("hello...");
         } catch (Exception e){
             System.out.println("error");
         }

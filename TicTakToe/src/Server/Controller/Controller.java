@@ -1,6 +1,6 @@
 package Server.Controller;
 
-import Client.Model.Board;
+import Model.Board;
 
 import java.io.*;
 import java.net.Socket;
@@ -20,7 +20,7 @@ public class Controller implements Runnable {
     private Board theBoard;
     private char mark;
 
-    public Controller( Socket clientSocket1, Socket clientSocket2) {
+    public Controller(Socket clientSocket1, Socket clientSocket2) {
 
         this.player1 = clientSocket1;
         this.player2 = clientSocket2;
@@ -39,15 +39,15 @@ public class Controller implements Runnable {
         Board theBoard = new Board();
 
         try {
-        while (theBoard.isRunning()) {
+            while (theBoard.isRunning()) {
 
-                clientOutput1.writeObject(theBoard);
-                theBoard = (Board) clientInput1.readObject();
-                clientOutput2.writeObject(theBoard);
-                theBoard = (Board) clientInput2.readObject();
-        }
-        clientOutput1.writeObject(theBoard);
-        clientOutput2.writeObject(theBoard);
+                writeOut(theBoard, clientOutput1);
+                theBoard = (Board) readIn(clientInput1);
+                writeOut(theBoard, clientOutput2);
+                theBoard = (Board) readIn(clientInput2);
+            }
+            writeOut(theBoard, clientOutput1);
+            writeOut(theBoard, clientOutput2);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -67,6 +67,14 @@ public class Controller implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private Object readIn(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        return ois.readObject();
+    }
+
+    private static void writeOut(java.io.Serializable obj, ObjectOutputStream oos) throws IOException {
+        oos.writeObject(obj);
     }
 
 

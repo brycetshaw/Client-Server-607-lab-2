@@ -2,8 +2,7 @@ package Client;
 
 
 import Client.Controller.Controller;
-import Client.Model.Board;
-import Client.Model.Game;
+import Model.Game;
 import Client.View.View;
 
 import java.io.*;

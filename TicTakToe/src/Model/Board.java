@@ -1,11 +1,10 @@
-package Client.Model;
-
-import Server.Model.Constants;
+package Model;
 
 import java.io.Serializable;
 
-public class Board implements Serializable {
+public class Board implements Serializable, Constants {
 
+    public static final long serialVersionUID = 4L;
     private char[][] theBoard = new char[3][3];
     private String xPlayer;
     private String yPlayer;
@@ -16,8 +15,8 @@ public class Board implements Serializable {
 
     public Board(){
         theBoard = new char[3][3];
-        for(int i = 0; i > 3; i++){
-            for(int j = 0; j > 3 ; j++){
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3 ; j++){
                 theBoard[i][j] = Constants.SPACE_CHAR;
             }
         }

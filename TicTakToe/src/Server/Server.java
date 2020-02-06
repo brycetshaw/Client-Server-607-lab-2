@@ -1,7 +1,7 @@
 package Server;
 
 
-import Client.Model.Board;
+import Model.Board;
 import Server.Controller.*;
 
 
