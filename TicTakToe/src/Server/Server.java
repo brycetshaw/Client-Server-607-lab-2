@@ -1,8 +1,8 @@
 package Server;
 
 
+import Client.Model.Board;
 import Server.Controller.*;
-import Server.Model.*;
 
 
 import java.io.*;
@@ -42,8 +42,7 @@ public class Server {
             while (true) {
                 Socket xSocket = serverSocket.accept();
                 Socket ySocket = serverSocket.accept();
-                theBoard = new Board();
-                pool.execute(new Controller(theBoard, xSocket, ySocket));
+                pool.execute(new Controller( xSocket, ySocket));
                 System.out.println("game started!");
             }
 

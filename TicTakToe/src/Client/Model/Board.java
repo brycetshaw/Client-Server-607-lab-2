@@ -1,4 +1,6 @@
-package Server.Model;
+package Client.Model;
+
+import Server.Model.Constants;
 
 import java.io.Serializable;
 
@@ -20,7 +22,7 @@ public class Board implements Serializable {
             }
         }
         toPlay = Constants.LETTER_X;
-        isRunning = false;
+        isRunning = true;
         message = "waiting for players to join";
     }
 
