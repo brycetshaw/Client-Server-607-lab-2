@@ -1,15 +1,8 @@
-package Client.View;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 
-public class View extends JFrame{
-    BufferedReader stdIn;
-
+public class TikTakToeView extends JFrame {
     public JButton[][] buttons;
     private JButton newGame;
     private JLabel indicator;
@@ -17,9 +10,8 @@ public class View extends JFrame{
     private JPanel gamePanel;
     private JPanel messagePanel;
 
-    public View(){
 
-
+    public TikTakToeView() {
         super("Tic Tak Toe");
         setLayout(new BorderLayout());
         setSize(650,400);
@@ -45,8 +37,6 @@ public class View extends JFrame{
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(false);
-
-        stdIn = new BufferedReader(new InputStreamReader(System.in));
     }
 
     private void initComponents(){
@@ -60,14 +50,13 @@ public class View extends JFrame{
         this.buttons = new JButton[3][3];
         for (int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++) {
-                buttons[i][j] = new JButton(" ");
+                buttons[i][j] = new JButton(Character.toString(Constants.SPACE_CHAR));
                 buttons[i][j].setActionCommand(Integer.toString(i) + " " + Integer.toString(j));
                 buttons[i][j].setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 gamePanel.add(buttons[i][j]);
             }
         }
     }
-
 
     public void addButtonListeners(int i, int j, ActionListener actionListener) {
         buttons[i][j].addActionListener(actionListener);
@@ -85,20 +74,5 @@ public class View extends JFrame{
     public void setMessage(String s) {
         messageArea.setText(s);
         this.newGame.setEnabled(true);
-    }
-
-
-    public String getResponse(){
-        System.out.println();
-        try {
-            return stdIn.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void sendRequest(String s) {
-        System.out.println(s);
     }
 }
