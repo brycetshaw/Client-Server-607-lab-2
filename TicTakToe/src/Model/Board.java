@@ -11,6 +11,8 @@ public class Board implements Serializable, Constants {
     private char toPlay;
     private boolean isRunning;
     private String message;
+    private String gameState;
+
 
 
     public Board(){
@@ -22,6 +24,7 @@ public class Board implements Serializable, Constants {
         }
         toPlay = Constants.LETTER_X;
         isRunning = true;
+        gameState = "0Players";
         message = "waiting for players to join";
     }
 

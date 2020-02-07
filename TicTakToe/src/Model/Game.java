@@ -6,10 +6,12 @@ public class Game implements Constants{
     public static char addPlayer(Model.Board theBoard, String readLine) {
         if (theBoard.getxPlayer() == null) {
             theBoard.setxPlayer(readLine);
+            theBoard.setMessage(theBoard.getxPlayer() + " is playing as X.");
             return Constants.LETTER_X;
         } else {
             theBoard.setyPlayer(readLine);
             theBoard.setRunning(true);
+            theBoard.setMessage(theBoard.getMessage() +" "+ theBoard.getyPlayer() + " is playing as O.");
             return Constants.LETTER_O;
         }
     }
@@ -132,6 +134,10 @@ public class Game implements Constants{
             st +=("|     ");
         st +=("\n|");
         return st;
+    }
+
+    public boolean isPlaying(Board theBoard, char mark) {
+         return theBoard.getToPlay() == mark;
     }
 }
 

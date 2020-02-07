@@ -49,6 +49,11 @@ public class View extends JFrame{
         stdIn = new BufferedReader(new InputStreamReader(System.in));
     }
 
+    public String getName(){
+        String name= JOptionPane.showInputDialog("What is your name?");
+        return name;
+    }
+
     private void initComponents(){
         initButtons();
         this.indicator = new JLabel("X");
@@ -101,4 +106,18 @@ public class View extends JFrame{
     public void sendRequest(String s) {
         System.out.println(s);
     }
+
+    public void updateButtons(char[][] gameState){
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                buttons[i][j].setText(Character.toString(gameState[i][j]));
+            }
+        }
+    }
+
+    public void setMessageArea(String st) {
+        this.messageArea = new JTextArea(st);
+    }
+
+
 }
