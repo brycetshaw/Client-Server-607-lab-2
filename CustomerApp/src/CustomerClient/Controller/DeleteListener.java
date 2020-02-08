@@ -44,7 +44,7 @@ public class DeleteListener {
 
     /**
      * This constructs the ClientListListener object and adds a listener to listen to a mouse click on the delete button.
-     * @param clientManager
+     *
      * @param clientInfoView
      * @param clientListListener
      * @param searchClientView
@@ -69,17 +69,21 @@ public class DeleteListener {
                 customers.add(customer);
                 customerDto.setCustomers(customers);
                 out.writeObject(customerDto);
-                //TODO need to output success message
-//                Customer existingClient = clientManager.searchClientId(this.clientInfoView.getClientId().getText());
-//                if (existingClient != null) {
-//                    deleteClient(existingClient);
-//                    clearFields();
-//                }
-//                else {
-//                    clientInfoView.showMessage("Must input a proper client ID!");
-//                }
-            } catch (NumberFormatException | IOException ex) {
+                out.reset();
+                CustomerDto result = (CustomerDto) in.readObject();
+                if (result.getCommand().contentEquals("DELETESUCCESS")) {
+                    searchListener.populateSearchResults(true);
+                    clientInfoView.showMessage("Customer info successfully deleted!");
+                    clearFields();
+                } else {
+                    clientInfoView.showMessage("Something wrong happened.  Please try again.");
+                }
+            } catch (NumberFormatException ex) {
                 clientInfoView.showMessage("Id field must be filled out in order to attempt deletion");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            } catch (ClassNotFoundException ex) {
+                ex.printStackTrace();
             }
         });
     }
@@ -93,14 +97,5 @@ public class DeleteListener {
         searchClientView.getResultArea().clearSelection();
         clientInfoView.clearFields();
         clientListListener.setListPopulated(true);
-    }
-
-    /**
-     * Deletes the client in the database and refresh the list of clients.
-     * @param existingClient
-     */
-    private void deleteClient(Customer existingClient) throws IOException, ClassNotFoundException {
-        searchListener.populateSearchResults(true);
-        clientInfoView.showMessage("Client successfully deleted!");
     }
 }

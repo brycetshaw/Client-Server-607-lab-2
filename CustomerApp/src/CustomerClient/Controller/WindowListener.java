@@ -26,6 +26,7 @@ public class WindowListener {
                 customerDto.setCommand("QUIT");
                 try {
                     out.writeObject(customerDto);
+                    out.reset();
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }

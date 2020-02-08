@@ -55,24 +55,6 @@ public class Customer implements Serializable {
     public Customer () {}
 
     /**
-     * Constructor to be used when adding a new client.
-     * @param firstName
-     * @param lastName
-     * @param address
-     * @param postalCode
-     * @param phoneNumber
-     * @param customerType
-     */
-    public Customer(String firstName, String lastName, String address, String postalCode, String phoneNumber, String customerType) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.postalCode = postalCode;
-        this.phoneNumber = phoneNumber;
-        this.customerType = customerType;
-    }
-
-    /**
      * Constructor to be used when fetching client information from the database.
      * @param id
      * @param firstName

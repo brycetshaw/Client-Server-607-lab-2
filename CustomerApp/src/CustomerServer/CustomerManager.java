@@ -10,7 +10,8 @@ import java.util.Scanner;
 
 public class CustomerManager {
 
-    private static int idGenerator = 1;
+    public IdGenerator idGenerator= new IdGenerator(); //how come i cant declare this in the constructor>??
+
     /**
      * Connection object used to interface with the MySQL database.
      */
@@ -31,9 +32,12 @@ public class CustomerManager {
      * NOTE2: If you have not created your first database in mySQL yet, leave the
      *        "[DATABASE NAME]" blank to get a connection and create one with the createDB() method.
      */
-    public String connectionInfo = "jdbc:mysql://localhost:3306/CustomerDB",
+//    public String connectionInfo = "jdbc:mysql://customerdatabase.cerypxhrqdnm.us-east-1.rds.amazonaws.com:3306/customerdb",
+//            login          = "admin",
+//            password       = "adminadmin";
+    public String connectionInfo = "jdbc:mysql://localhost:3306/customerdb",
             login          = "root",
-            password       = "Instance023";
+            password       = "Computer,043";
 
     /**
      * Constructs the ClientManager object and connect to the database.
@@ -47,10 +51,6 @@ public class CustomerManager {
             // If this fails make sure your connectionInfo and login/password are correct
             jdbc_connection = DriverManager.getConnection(connectionInfo, login, password);
             System.out.println("Connected to: " + connectionInfo + "\n");
-            // Creates DB and seeds it if it doesn't exists
-//            createDB();
-//            createTable();
-//            fillTable();
         }
         catch(SQLException e) {
             e.printStackTrace();
@@ -83,7 +83,7 @@ public class CustomerManager {
      */
     public void createTable()
     {
-        String sql = "CREATE TABLE " + tableName + "(" +
+        String sql = "CREATE TABLE IF NOT EXISTS " + tableName + "(" +
                 "ID INT(4) NOT NULL, " +
                 "FIRSTNAME VARCHAR(20) NOT NULL, " +
                 "LASTNAME VARCHAR(20) NOT NULL, " +
@@ -108,7 +108,7 @@ public class CustomerManager {
      */
     public void removeTable()
     {
-        String sql = "DROP TABLE " + tableName;
+        String sql = "DROP TABLE IF EXISTS " + tableName;
         try{
             preparedStatement = jdbc_connection.prepareStatement(sql);
             preparedStatement.executeUpdate();
@@ -120,17 +120,37 @@ public class CustomerManager {
         }
     }
 
+    private void getLatestId() {
+        String sql = "SELECT MAX(ID) AS LatestId FROM " + tableName;
+        ResultSet result;
+        try {
+            preparedStatement = jdbc_connection.prepareStatement(sql);
+            result = preparedStatement.executeQuery();
+            if (result.next()) {
+                if ((result.getInt("LatestId") == -1)) {
+                    idGenerator.setIdGen(1);
+                } else {
+                    idGenerator.setIdGen(result.getInt("LatestId") + 1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
-     * Fills the data table with all the clients  from the text file 'clients.txt' if found
+     * Fills the data table with all the clients from the text file 'customers.txt' if found
      */
     public void fillTable()
     {
         try{
+            getLatestId();
             Scanner sc = new Scanner(new FileReader(dataFile));
             while(sc.hasNext())
             {
                 String customerInfo[] = sc.nextLine().split(";");
                 addItem( new Customer(
+                        idGenerator.getIdGen(),
                         customerInfo[0],
                         customerInfo[1],
                         customerInfo[2],
@@ -155,13 +175,14 @@ public class CustomerManager {
      * Add a customer to the database table
      * @param customer
      */
-    public void addItem(Customer customer)
+    public boolean addItem(Customer customer)
     {
+        getLatestId();
         String sql = "INSERT INTO " + tableName +
                 " (ID, FIRSTNAME, LASTNAME, ADDRESS, POSTALCODE, PHONENUMBER, CUSTOMERTYPE) VALUES (?,?,?,?,?,?,?)";
         try{
             preparedStatement = jdbc_connection.prepareStatement(sql);
-            preparedStatement.setInt(1, customer.getId());
+            preparedStatement.setInt(1, idGenerator.getIdGen());
             preparedStatement.setString(2, customer.getFirstName());
             preparedStatement.setString(3, customer.getLastName());
             preparedStatement.setString(4, customer.getAddress());
@@ -169,10 +190,12 @@ public class CustomerManager {
             preparedStatement.setString(6, customer.getPhoneNumber());
             preparedStatement.setString(7, customer.getCustomerType());
             preparedStatement.executeUpdate();
+            return true;
         }
         catch(SQLException e)
         {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -180,7 +203,7 @@ public class CustomerManager {
      * Update an existing client's info in the database table
      * @param customer
      */
-    public void updateItem(Customer customer)
+    public boolean updateItem(Customer customer)
     {
         String sql = "UPDATE " + tableName +
                 " SET FIRSTNAME = ?, LASTNAME = ?, ADDRESS = ?, POSTALCODE = ?, PHONENUMBER = ?, CUSTOMERTYPE = ? WHERE ID = ?";
@@ -194,10 +217,12 @@ public class CustomerManager {
             preparedStatement.setString(6, customer.getCustomerType());
             preparedStatement.setInt(7, customer.getId());
             preparedStatement.executeUpdate();
+            return true;
         }
         catch(SQLException e)
         {
             e.printStackTrace();
+            return false;
         }
     }
 
@@ -205,7 +230,7 @@ public class CustomerManager {
      * Delete an existing client's info in the database table
      * @param ID
      */
-    public void deleteItem(int ID)
+    public boolean deleteItem(int ID)
     {
         String sql = "DELETE FROM " + tableName +
                 " WHERE ID = ?";
@@ -213,10 +238,12 @@ public class CustomerManager {
             preparedStatement = jdbc_connection.prepareStatement(sql);
             preparedStatement.setInt(1, ID);
             preparedStatement.executeUpdate();
+            return true;
         }
         catch(SQLException e)
         {
             e.printStackTrace();
+            return false;
         }
     }
 

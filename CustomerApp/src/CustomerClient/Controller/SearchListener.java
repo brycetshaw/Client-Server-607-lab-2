@@ -85,20 +85,21 @@ public class SearchListener {
             customerDto.setCustomers(customers);
             try {
                 out.writeObject(customerDto);
+                out.reset();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             CustomerDto output = (CustomerDto) in.readObject();
-            if (output != null) {
+            if (output.getCommand().contentEquals("SUCCESS")) {
                 for (Customer customer : output.getCustomers()) {
                     searchClientView.getListModel().addElement(customer);
                 }
                 clientListListener.setListPopulated(true);
+            } else if (!suppressMessages && output.getCommand().contentEquals("FAILURE")) {
+                searchClientView.showMessage("No search results found with the entered parameters");
             } else {
-                if (!suppressMessages) {
-                    searchClientView.showMessage("No search results found with the entered parameters");
-                }
+                searchClientView.showMessage("Something went wrong. Please try again");
             }
         } else if (searchCriteriaView.getLastName().isSelected()) {
             CustomerDto customerDto = new CustomerDto();
@@ -110,20 +111,21 @@ public class SearchListener {
             customerDto.setCustomers(customers);
             try {
                 out.writeObject(customerDto);
+                out.reset();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             CustomerDto output = (CustomerDto) in.readObject();
-            if (output != null) {
+            if (output.getCommand().contentEquals("SUCCESS")) {
                 for (Customer customer : output.getCustomers()) {
                     searchClientView.getListModel().addElement(customer);
                 }
                 clientListListener.setListPopulated(true);
+            } else if (!suppressMessages && output.getCommand().contentEquals("FAILURE")) {
+                searchClientView.showMessage("No search results found with the entered parameters");
             } else {
-                if (!suppressMessages) {
-                    searchClientView.showMessage("No search results found with the entered parameters");
-                }
+                searchClientView.showMessage("Something went wrong. Please try again");
             }
         } else if (searchCriteriaView.getClientType().isSelected()) {
             CustomerDto customerDto = new CustomerDto();
@@ -135,65 +137,22 @@ public class SearchListener {
             customerDto.setCustomers(customers);
             try {
                 out.writeObject(customerDto);
+                out.reset();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             CustomerDto output = (CustomerDto) in.readObject();
-            if (output != null) {
+            if (output.getCommand().contentEquals("SUCCESS")) {
                 for (Customer customer : output.getCustomers()) {
                     searchClientView.getListModel().addElement(customer);
                 }
                 clientListListener.setListPopulated(true);
+            } else if (!suppressMessages && output.getCommand().contentEquals("FAILURE")) {
+                searchClientView.showMessage("No search results found with the entered parameters");
             } else {
-                if (!suppressMessages) {
-                    searchClientView.showMessage("No search results found with the entered parameters");
-                }
+                searchClientView.showMessage("Something went wrong. Please try again");
             }
         }
     }
-
-    /**
-     * Searches for clients based on either last name or client type and populates the list if found,
-     * otherwise displays error message.
-     * @param suppressMessages
-     * @param clients
-     */
-//    private void searchClient(Boolean suppressMessages, ArrayList<Client> clients) {
-//        ArrayList<Client> clientArray = clients;
-//        if (clientArray.size() != 0) {
-//            for (Client client : clientArray) {
-//                searchClientView.getListModel().addElement(client);
-//            }
-//            clientListListener.setListPopulated(true);
-//        } else {
-//            if (!suppressMessages) {
-//                searchClientView.showMessage("No search results found with the entered parameters");
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Searches for the client based on Id and populates the list if found, otherwise displays error message.
-//     * @param suppressMessages
-//     * @param searchCriteria
-//     */
-//    private void searchClientId(Boolean suppressMessages, String searchCriteria) {
-//        try {
-//            Client client = clientManager.searchClientId(searchCriteria);
-//            if (client != null) {
-//                searchClientView.getListModel().addElement(client);
-//                clientListListener.setListPopulated(true);
-//            }
-//            else {
-//                if (!suppressMessages) {
-//                    searchClientView.showMessage("No search results found with the entered parameters");
-//                }
-//            }
-//        } catch (NumberFormatException e) {
-//            if (!suppressMessages) {
-//                searchClientView.showMessage("No search results found with the entered parameters");
-//            }
-//        }
-//    }
 }
