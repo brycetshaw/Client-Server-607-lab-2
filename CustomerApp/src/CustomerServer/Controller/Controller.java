@@ -25,36 +25,39 @@ public class Controller implements Runnable {
     public void getCustomersById(String Id) {
         try {
             ArrayList<Customer> customers = customerManager.searchCustomerId(Id);
-            if (customers.size() != 0) {
-                CustomerDto customerDto = new CustomerDto();
-                customerDto.setCommand("SUCCESS");
-                customerDto.setCustomers(customers);
-                out.writeObject(customerDto);
-                out.reset();
-            } else {
-                CustomerDto customerDto = new CustomerDto();
-                customerDto.setCommand("FAILURE");
-                out.writeObject(customerDto);
-            }
+            returnCustomerArrayToClient(customers);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private void returnCustomerArrayToClient(ArrayList<Customer> customers) throws IOException {
+        if (customers.size() != 0) {
+            returnSuccess(customers);
+        } else {
+            returnFailure();
+        }
+    }
+
+    private void returnFailure() throws IOException {
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setCommand("FAILURE");
+        out.writeObject(customerDto);
+        out.reset();
+    }
+
+    private void returnSuccess(ArrayList<Customer> customers) throws IOException {
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setCommand("SUCCESS");
+        customerDto.setCustomers(customers);
+        out.writeObject(customerDto);
+        out.reset();
+    }
+
     public void getCustomersByLastName(String lastName) {
         try {
             ArrayList<Customer> customers = customerManager.searchCustomerLastName(lastName);
-            if (customers.size() != 0) {
-                CustomerDto customerDto = new CustomerDto();
-                customerDto.setCommand("SUCCESS");
-                customerDto.setCustomers(customers);
-                out.writeObject(customerDto);
-                out.reset();
-            } else {
-                CustomerDto customerDto = new CustomerDto();
-                customerDto.setCommand("FAILURE");
-                out.writeObject(customerDto);
-            }
+            returnCustomerArrayToClient(customers);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,17 +66,7 @@ public class Controller implements Runnable {
     public void getCustomersByCustomerType(String customerType) {
         try {
             ArrayList<Customer> customers = customerManager.searchCustomerType(customerType);
-            if (customers.size() != 0) {
-                CustomerDto customerDto = new CustomerDto();
-                customerDto.setCommand("SUCCESS");
-                customerDto.setCustomers(customers);
-                out.writeObject(customerDto);
-                out.reset();
-            } else {
-                CustomerDto customerDto = new CustomerDto();
-                customerDto.setCommand("FAILURE");
-                out.writeObject(customerDto);
-            }
+            returnCustomerArrayToClient(customers);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,10 +78,14 @@ public class Controller implements Runnable {
             customerDto.setCommand("CREATESUCCESS");
             out.writeObject(customerDto);
         } else {
-            CustomerDto customerDto = new CustomerDto();
-            customerDto.setCommand(" ");
-            out.writeObject(customerDto);
+            returnEditFailure();
         }
+    }
+
+    private void returnEditFailure() throws IOException {
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setCommand(" ");
+        out.writeObject(customerDto);
     }
 
     public void editCustomer(Customer customer) throws IOException {
@@ -97,9 +94,7 @@ public class Controller implements Runnable {
             customerDto.setCommand("EDITSUCCESS");
             out.writeObject(customerDto);
         } else {
-            CustomerDto customerDto = new CustomerDto();
-            customerDto.setCommand(" ");
-            out.writeObject(customerDto);
+            returnEditFailure();
         }
     }
 
@@ -109,15 +104,13 @@ public class Controller implements Runnable {
             customerDto.setCommand("DELETESUCCESS");
             out.writeObject(customerDto);
         } else {
-            CustomerDto customerDto = new CustomerDto();
-            customerDto.setCommand(" ");
-            out.writeObject(customerDto);
+            returnEditFailure();
         }
     }
 
     @Override
     public void run() {
-        CustomerDto customerDto = null;
+        CustomerDto customerDto;
         try {
             while (true) {
                 customerDto = (CustomerDto) in.readObject();
@@ -141,9 +134,7 @@ public class Controller implements Runnable {
                             ArrayList<Customer> existingCustomer = customerManager.searchCustomerId(
                                     Integer.toString(customerDto.getCustomers().get(0).getId()));
                             if (existingCustomer.size() == 0) {
-                                CustomerDto result = new CustomerDto();
-                                result.setCommand("FAILURE");
-                                out.writeObject(result);
+                                returnFailure();
                             } else {
                                 editCustomer(customerDto.getCustomers().get(0));
                             }

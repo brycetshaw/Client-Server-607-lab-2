@@ -48,7 +48,8 @@ public class Client {
     }
 
     public static void main (String [] args) {
-        Client client = new Client("localhost", 5000);
+//        Client client = new Client("localhost", 5000);
+        Client client = new Client("18.232.131.125", 5000);
         client.startup();
     }
 }

@@ -57,9 +57,7 @@ public class SearchListener {
         this.searchCriteriaView.addSearchListener(e -> {
             try {
                 populateSearchResults(false);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            } catch (ClassNotFoundException ex) {
+            } catch (IOException | ClassNotFoundException | NumberFormatException ex) {
                 ex.printStackTrace();
             }
         });
@@ -70,89 +68,89 @@ public class SearchListener {
      *
      * @param suppressMessages
      */
-    public void populateSearchResults(Boolean suppressMessages) throws IOException, ClassNotFoundException {
-        clientListListener.setListPopulated(false);
-        searchClientView.getListModel().removeAllElements();
+    public void populateSearchResults(Boolean suppressMessages) throws IOException, ClassNotFoundException, NumberFormatException {
+        clearPreviousResults();
         String searchCriteria = searchCriteriaView.getSearchField().getText();
 
         if (searchCriteriaView.getClientId().isSelected()) {
-            CustomerDto customerDto = new CustomerDto();
-            customerDto.setCommand("GETID");
-            ArrayList<Customer> customers = new ArrayList<>();
-            Customer temp = new Customer();
-            temp.setId(Integer.parseInt(searchCriteria));
-            customers.add(temp);
-            customerDto.setCustomers(customers);
-            try {
-                out.writeObject(customerDto);
-                out.reset();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            CustomerDto customerDto = createIdDto(searchCriteria);
+            writeRequest(customerDto);
 
             CustomerDto output = (CustomerDto) in.readObject();
-            if (output.getCommand().contentEquals("SUCCESS")) {
-                for (Customer customer : output.getCustomers()) {
-                    searchClientView.getListModel().addElement(customer);
-                }
-                clientListListener.setListPopulated(true);
-            } else if (!suppressMessages && output.getCommand().contentEquals("FAILURE")) {
-                searchClientView.showMessage("No search results found with the entered parameters");
-            } else {
-                searchClientView.showMessage("Something went wrong. Please try again");
-            }
+            outputResponse(suppressMessages, output);
         } else if (searchCriteriaView.getLastName().isSelected()) {
-            CustomerDto customerDto = new CustomerDto();
-            customerDto.setCommand("GETLASTNAME");
-            ArrayList<Customer> customers = new ArrayList<>();
-            Customer temp = new Customer();
-            temp.setLastName(searchCriteria);
-            customers.add(temp);
-            customerDto.setCustomers(customers);
-            try {
-                out.writeObject(customerDto);
-                out.reset();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            CustomerDto customerDto = createLastNameDto(searchCriteria);
+            writeRequest(customerDto);
 
             CustomerDto output = (CustomerDto) in.readObject();
-            if (output.getCommand().contentEquals("SUCCESS")) {
-                for (Customer customer : output.getCustomers()) {
-                    searchClientView.getListModel().addElement(customer);
-                }
-                clientListListener.setListPopulated(true);
-            } else if (!suppressMessages && output.getCommand().contentEquals("FAILURE")) {
-                searchClientView.showMessage("No search results found with the entered parameters");
-            } else {
-                searchClientView.showMessage("Something went wrong. Please try again");
-            }
+            outputResponse(suppressMessages, output);
         } else if (searchCriteriaView.getClientType().isSelected()) {
-            CustomerDto customerDto = new CustomerDto();
-            customerDto.setCommand("GETTYPE");
-            ArrayList<Customer> customers = new ArrayList<>();
-            Customer temp = new Customer();
-            temp.setCustomerType(searchCriteria);
-            customers.add(temp);
-            customerDto.setCustomers(customers);
-            try {
-                out.writeObject(customerDto);
-                out.reset();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
+            CustomerDto customerDto = createTypeDto(searchCriteria);
+            writeRequest(customerDto);
             CustomerDto output = (CustomerDto) in.readObject();
-            if (output.getCommand().contentEquals("SUCCESS")) {
-                for (Customer customer : output.getCustomers()) {
-                    searchClientView.getListModel().addElement(customer);
-                }
-                clientListListener.setListPopulated(true);
-            } else if (!suppressMessages && output.getCommand().contentEquals("FAILURE")) {
-                searchClientView.showMessage("No search results found with the entered parameters");
-            } else {
-                searchClientView.showMessage("Something went wrong. Please try again");
+            outputResponse(suppressMessages, output);
+        } else {
+            searchClientView.showMessage("Please select an option");
+        }
+    }
+
+    private void clearPreviousResults() {
+        clientListListener.setListPopulated(false);
+        searchClientView.getListModel().removeAllElements();
+    }
+
+    private CustomerDto createIdDto(String searchCriteria) {
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setCommand("GETID");
+        ArrayList<Customer> customers = new ArrayList<>();
+        Customer temp = new Customer();
+        temp.setId(Integer.parseInt(searchCriteria));
+        customers.add(temp);
+        customerDto.setCustomers(customers);
+        return customerDto;
+    }
+
+    private CustomerDto createLastNameDto(String searchCriteria) {
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setCommand("GETLASTNAME");
+        ArrayList<Customer> customers = new ArrayList<>();
+        Customer temp = new Customer();
+        temp.setLastName(searchCriteria);
+        customers.add(temp);
+        customerDto.setCustomers(customers);
+        return customerDto;
+    }
+
+    private CustomerDto createTypeDto(String searchCriteria) {
+        CustomerDto customerDto = new CustomerDto();
+        customerDto.setCommand("GETTYPE");
+        ArrayList<Customer> customers = new ArrayList<>();
+        Customer temp = new Customer();
+        temp.setCustomerType(searchCriteria);
+        customers.add(temp);
+        customerDto.setCustomers(customers);
+        return customerDto;
+    }
+
+    private void outputResponse(Boolean suppressMessages, CustomerDto output) {
+        if (output.getCommand().contentEquals("SUCCESS")) {
+            for (Customer customer : output.getCustomers()) {
+                searchClientView.getListModel().addElement(customer);
             }
+            clientListListener.setListPopulated(true);
+        } else if (!suppressMessages && output.getCommand().contentEquals("FAILURE")) {
+            searchClientView.showMessage("No search results found with the entered parameters");
+        } else {
+            searchClientView.showMessage("Something went wrong. Please try again");
+        }
+    }
+
+    private void writeRequest(CustomerDto customerDto) {
+        try {
+            out.writeObject(customerDto);
+            out.reset();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
