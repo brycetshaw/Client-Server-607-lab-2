@@ -65,7 +65,8 @@ public class DeleteListener {
                 ArrayList<Customer> customers = new ArrayList<>();
                 customerDto.setCommand("DELETE");
                 Customer customer = new Customer();
-                customer.setId(Integer.parseInt(clientInfoView.getClientId().getText()));
+                String Id = clientInfoView.getClientId().getText();
+                customer.setId(Integer.parseInt(Id));
                 customers.add(customer);
                 customerDto.setCustomers(customers);
                 out.writeObject(customerDto);
@@ -75,6 +76,8 @@ public class DeleteListener {
                     searchListener.populateSearchResults(true);
                     clientInfoView.showMessage("Customer info successfully deleted!");
                     clearFields();
+                } else if (result.getCommand().contentEquals("FAILURE")) {
+                    clientInfoView.showMessage("Client with ID: " + Id + " does not exist.  Please double check the Customer Id and try again.");
                 } else {
                     clientInfoView.showMessage("Something wrong happened.  Please try again.");
                 }

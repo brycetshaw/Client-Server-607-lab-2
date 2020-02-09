@@ -131,8 +131,7 @@ public class Controller implements Runnable {
                         if (customerDto.getCustomers().get(0).getId() == -1) {
                             createCustomer(customerDto.getCustomers().get(0));
                         } else {
-                            ArrayList<Customer> existingCustomer = customerManager.searchCustomerId(
-                                    Integer.toString(customerDto.getCustomers().get(0).getId()));
+                            ArrayList<Customer> existingCustomer = checkExistingCustomer(customerDto);
                             if (existingCustomer.size() == 0) {
                                 returnFailure();
                             } else {
@@ -141,7 +140,12 @@ public class Controller implements Runnable {
                         }
                         break;
                     case "DELETE":
-                        deleteCustomer(customerDto.getCustomers().get(0));
+                        ArrayList<Customer> existingCustomer = checkExistingCustomer(customerDto);
+                        if (existingCustomer.size() == 0) {
+                            returnFailure();
+                        } else {
+                            deleteCustomer(customerDto.getCustomers().get(0));
+                        }
                         break;
                 }
             }
@@ -156,6 +160,11 @@ public class Controller implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private ArrayList<Customer> checkExistingCustomer(CustomerDto customerDto) {
+        return customerManager.searchCustomerId(
+                Integer.toString(customerDto.getCustomers().get(0).getId()));
     }
 }
 
