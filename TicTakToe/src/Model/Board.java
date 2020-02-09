@@ -26,6 +26,8 @@ public class Board implements Serializable, Constants {
         isRunning = true;
         gameState = "0Players";
         message = "waiting for players to join";
+        xPlayer = "";
+        yPlayer = "";
     }
 
 

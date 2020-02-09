@@ -78,6 +78,22 @@ public class View extends JFrame{
         buttons[i][j].addActionListener(actionListener);
     }
 
+    public void enableButtons(){
+        for (int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++) {
+                buttons[i][j].setEnabled(true);
+            }
+        }
+    }
+
+    public void disableButtons(){
+        for (int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++) {
+                buttons[i][j].setEnabled(false);
+            }
+        }
+    }
+
     public void addNewGameListener( ActionListener actionListener) {
         newGame.addActionListener(actionListener);
     }

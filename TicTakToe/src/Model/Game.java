@@ -4,7 +4,7 @@ package Model;
 public class Game implements Constants{
 
     public static char addPlayer(Model.Board theBoard, String readLine) {
-        if (theBoard.getxPlayer() == null) {
+        if (theBoard.getxPlayer().equals("")) {
             theBoard.setxPlayer(readLine);
             theBoard.setMessage(theBoard.getxPlayer() + " is playing as X.");
             return Constants.LETTER_X;
@@ -63,22 +63,18 @@ public class Game implements Constants{
     }
 
 
-    public static boolean makeMove(Board theBoard, char mark, int[] move) {
+    public static void makeMove(Board theBoard, char mark, int[] move) {
         char[][] gameState = theBoard.getTheBoard();
         try{
-            System.out.println(Character.getNumericValue( gameState[move[0]][move[1]] )+ " == " + Character.getNumericValue(gameState[move[0]][move[1]]) );
+//            System.out.println(Character.getNumericValue( gameState[move[0]][move[1]] )+ " == " + Character.getNumericValue(gameState[move[0]][move[1]]) );
             if (gameState[move[0]][move[1]] == Constants.SPACE_CHAR){
-
                 gameState[move[0]][move[1]] = mark;
                 theBoard.setTheBoard(gameState);
-                return true;
             }
-            System.out.println("hello...");
-        } catch (Exception e){
-            System.out.println("error");
-        }
-        return false;
+
+        } catch (Exception e){ }
     }
+
 
     /**
      * renders board.
@@ -138,6 +134,17 @@ public class Game implements Constants{
 
     public boolean isPlaying(Board theBoard, char mark) {
          return theBoard.getToPlay() == mark;
+    }
+
+    public boolean moveIsValid(Board theBoard, int[] move) {
+        char[][] gameState = theBoard.getTheBoard();
+        try{
+            if (gameState[move[0]][move[1]] == Constants.SPACE_CHAR){
+
+                return true;
+            }
+        } catch (Exception e){ }
+        return false;
     }
 }
 

@@ -39,15 +39,15 @@ public class Controller implements Runnable {
         Board theBoard = new Board();
 
         try {
-            while (theBoard.isRunning()) {
+            while (true) {
 
                 writeOut(theBoard, clientOutput1);
                 theBoard = (Board) readIn(clientInput1);
                 writeOut(theBoard, clientOutput2);
                 theBoard = (Board) readIn(clientInput2);
             }
-            writeOut(theBoard, clientOutput1);
-            writeOut(theBoard, clientOutput2);
+//            writeOut(theBoard, clientOutput1);
+//            writeOut(theBoard, clientOutput2);
 
         } catch (IOException e) {
             e.printStackTrace();
