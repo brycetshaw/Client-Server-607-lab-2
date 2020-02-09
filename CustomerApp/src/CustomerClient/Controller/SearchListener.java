@@ -1,5 +1,6 @@
 package CustomerClient.Controller;
 
+import CustomerClient.View.MainView;
 import CustomerClient.View.SearchClientView;
 import CustomerClient.View.SearchCriteriaView;
 import CustomerModel.Customer;
@@ -19,42 +20,15 @@ import java.util.ArrayList;
  * @since 2019/11/13
  */
 
-public class SearchListener {
-    /**
-     * Input and output streams.
-     */
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
-    /**
-     * Panel containing GUI elements related to search criteria for clients.
-     */
-    private SearchCriteriaView searchCriteriaView;
-    /**
-     * Panel containing GUI elements related to displaying the search results to the user.
-     */
-    private SearchClientView searchClientView;
-    /**
-     * Controller related to dealing with actions on the list element.
-     */
+public class SearchListener extends BaseListener{
+
     private ClientListListener clientListListener;
 
-    /**
-     * This constructs the SaveListener object and adds a listener to listen to a mouse click on the search button.
-     *
-     *
-     * @param searchCriteriaView
-     * @param searchClientView
-     * @param clientListListener
-     */
-    public SearchListener(ObjectOutputStream out, ObjectInputStream in, SearchCriteriaView searchCriteriaView,
-                          SearchClientView searchClientView, ClientListListener clientListListener) {
-        this.out = out;
-        this.in = in;
-        this.searchCriteriaView = searchCriteriaView;
-        this.searchClientView = searchClientView;
+    public SearchListener(MainView mainView, ObjectInputStream in, ObjectOutputStream out, ClientListListener clientListListener) {
+        super(mainView, in, out);
         this.clientListListener = clientListListener;
 
-        this.searchCriteriaView.addSearchListener(e -> {
+        this.mainView.getSearchCriteriaView().addSearchListener(e -> {
             try {
                 populateSearchResults(false);
             } catch (IOException | ClassNotFoundException | NumberFormatException ex) {
@@ -70,33 +44,31 @@ public class SearchListener {
      */
     public void populateSearchResults(Boolean suppressMessages) throws IOException, ClassNotFoundException, NumberFormatException {
         clearPreviousResults();
-        String searchCriteria = searchCriteriaView.getSearchField().getText();
+        String searchCriteria = mainView.getSearchCriteriaView().getSearchField().getText();
 
-        if (searchCriteriaView.getClientId().isSelected()) {
+        if (mainView.getSearchCriteriaView().getClientId().isSelected()) {
             CustomerDto customerDto = createIdDto(searchCriteria);
             writeRequest(customerDto);
-
             CustomerDto output = (CustomerDto) in.readObject();
             outputResponse(suppressMessages, output);
-        } else if (searchCriteriaView.getLastName().isSelected()) {
+        } else if (mainView.getSearchCriteriaView().getLastName().isSelected()) {
             CustomerDto customerDto = createLastNameDto(searchCriteria);
             writeRequest(customerDto);
-
             CustomerDto output = (CustomerDto) in.readObject();
             outputResponse(suppressMessages, output);
-        } else if (searchCriteriaView.getClientType().isSelected()) {
+        } else if (mainView.getSearchCriteriaView().getClientType().isSelected()) {
             CustomerDto customerDto = createTypeDto(searchCriteria);
             writeRequest(customerDto);
             CustomerDto output = (CustomerDto) in.readObject();
             outputResponse(suppressMessages, output);
         } else {
-            searchClientView.showMessage("Please select an option");
+            mainView.getClientInfoView().showMessage("Please select an option");
         }
     }
 
     private void clearPreviousResults() {
         clientListListener.setListPopulated(false);
-        searchClientView.getListModel().removeAllElements();
+        mainView.getSearchClientView().getListModel().removeAllElements();
     }
 
     private CustomerDto createIdDto(String searchCriteria) {
@@ -135,13 +107,13 @@ public class SearchListener {
     private void outputResponse(Boolean suppressMessages, CustomerDto output) {
         if (output.getCommand().contentEquals("SUCCESS")) {
             for (Customer customer : output.getCustomers()) {
-                searchClientView.getListModel().addElement(customer);
+                mainView.getSearchClientView().getListModel().addElement(customer);
             }
             clientListListener.setListPopulated(true);
         } else if (!suppressMessages && output.getCommand().contentEquals("FAILURE")) {
-            searchClientView.showMessage("No search results found with the entered parameters");
+            mainView.getSearchClientView().showMessage("No search results found with the entered parameters");
         } else {
-            searchClientView.showMessage("Something went wrong. Please try again");
+            mainView.getSearchClientView().showMessage("Something went wrong. Please try again");
         }
     }
 

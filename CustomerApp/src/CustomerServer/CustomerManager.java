@@ -32,12 +32,16 @@ public class CustomerManager {
      * NOTE2: If you have not created your first database in mySQL yet, leave the
      *        "[DATABASE NAME]" blank to get a connection and create one with the createDB() method.
      */
-    public String connectionInfo = "jdbc:mysql://customerdatabase.cerypxhrqdnm.us-east-1.rds.amazonaws.com:3306/customerdb",
-            login          = "admin",
-            password       = "adminadmin";
-//    public String connectionInfo = "jdbc:mysql://localhost:3306/customerdb",
-//            login          = "root",
-//            password       = "Computer,043";
+
+    // This connection string is to connect to the RDS MySQL database
+//    public String connectionInfo = "jdbc:mysql://customerdatabase.cerypxhrqdnm.us-east-1.rds.amazonaws.com:3306/customerdb",
+//            login          = "admin",
+//            password       = "adminadmin";
+
+    // This connection string is to connect to the local MySQL database
+    public String connectionInfo = "jdbc:mysql://localhost:3306/customerdb",
+            login          = "root",
+            password       = "Computer,043";
 
     /**
      * Constructs the ClientManager object and connect to the database.

@@ -108,6 +108,33 @@ public class Controller implements Runnable {
         }
     }
 
+    private void deleteCustomer(CustomerDto customerDto) throws IOException {
+        ArrayList<Customer> existingCustomer = checkExistingCustomer(customerDto);
+        if (existingCustomer.size() == 0) {
+            returnFailure();
+        } else {
+            deleteCustomer(customerDto.getCustomers().get(0));
+        }
+    }
+
+    private void editOrCreateCustomer(CustomerDto customerDto) throws IOException {
+        if (customerDto.getCustomers().get(0).getId() == -1) {
+            createCustomer(customerDto.getCustomers().get(0));
+        } else {
+            ArrayList<Customer> existingCustomer = checkExistingCustomer(customerDto);
+            if (existingCustomer.size() == 0) {
+                returnFailure();
+            } else {
+                editCustomer(customerDto.getCustomers().get(0));
+            }
+        }
+    }
+
+    private ArrayList<Customer> checkExistingCustomer(CustomerDto customerDto) {
+        return customerManager.searchCustomerId(
+                Integer.toString(customerDto.getCustomers().get(0).getId()));
+    }
+
     @Override
     public void run() {
         CustomerDto customerDto;
@@ -128,24 +155,10 @@ public class Controller implements Runnable {
                         getCustomersByCustomerType(customerDto.getCustomers().get(0).getCustomerType());
                         break;
                     case "POST":
-                        if (customerDto.getCustomers().get(0).getId() == -1) {
-                            createCustomer(customerDto.getCustomers().get(0));
-                        } else {
-                            ArrayList<Customer> existingCustomer = checkExistingCustomer(customerDto);
-                            if (existingCustomer.size() == 0) {
-                                returnFailure();
-                            } else {
-                                editCustomer(customerDto.getCustomers().get(0));
-                            }
-                        }
+                        editOrCreateCustomer(customerDto);
                         break;
                     case "DELETE":
-                        ArrayList<Customer> existingCustomer = checkExistingCustomer(customerDto);
-                        if (existingCustomer.size() == 0) {
-                            returnFailure();
-                        } else {
-                            deleteCustomer(customerDto.getCustomers().get(0));
-                        }
+                        deleteCustomer(customerDto);
                         break;
                 }
             }
@@ -162,9 +175,6 @@ public class Controller implements Runnable {
         }
     }
 
-    private ArrayList<Customer> checkExistingCustomer(CustomerDto customerDto) {
-        return customerManager.searchCustomerId(
-                Integer.toString(customerDto.getCustomers().get(0).getId()));
-    }
+
 }
 

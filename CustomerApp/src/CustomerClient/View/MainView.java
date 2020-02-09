@@ -50,4 +50,16 @@ public class MainView extends JFrame {
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
         add(splitPane);
     }
+
+    public SearchClientView getSearchClientView() {
+        return searchClientView;
+    }
+
+    public ClientInfoView getClientInfoView() {
+        return clientInfoView;
+    }
+
+    public SearchCriteriaView getSearchCriteriaView() {
+        return searchCriteriaView;
+    }
 }

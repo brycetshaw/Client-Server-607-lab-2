@@ -1,7 +1,10 @@
 package CustomerClient.Controller;
 
-import CustomerClient.View.ClientInfoView;
-import CustomerClient.View.SearchClientView;
+
+import CustomerClient.View.MainView;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * ClearListener class and its instance methods and variables.
@@ -12,32 +15,19 @@ import CustomerClient.View.SearchClientView;
  * @since 2019/11/13
  */
 
-public class ClearListener {
-    /**
-     * Panel containing GUI elements related to displaying the search results to the user.
-     */
-    private SearchClientView searchClientView;
-    /**
-     * Panel containing GUI elements related to the form fields for a client.
-     */
-    private ClientInfoView clientInfoView;
+public class ClearListener extends BaseListener {
+
     /**
      * Controller related to dealing with actions on the list element.
      */
     private ClientListListener clientListListener;
 
-    /**
-     * This constructs the ClearListener object and adds a listener to listen to a mouse click on the clear button.
-     * @param searchClientView
-     * @param clientInfoView
-     * @param clientListListener
-     */
-    public ClearListener(SearchClientView searchClientView, ClientInfoView clientInfoView, ClientListListener clientListListener) {
-        this.searchClientView = searchClientView;
-        this.clientInfoView = clientInfoView;
+
+    public ClearListener(MainView mainView, ObjectInputStream in, ObjectOutputStream out, ClientListListener clientListListener) {
+        super(mainView, in, out);
         this.clientListListener = clientListListener;
 
-        this.clientInfoView.addClearListener(e -> {
+        this.mainView.getClientInfoView().addClearListener(e -> {
             clearFields();
         });
     }
@@ -48,8 +38,8 @@ public class ClearListener {
      */
     private void clearFields() {
         clientListListener.setListPopulated(false);
-        searchClientView.getResultArea().clearSelection();
-        clientInfoView.clearFields();
+        mainView.getSearchClientView().getResultArea().clearSelection();
+        mainView.getClientInfoView().clearFields();
         clientListListener.setListPopulated(true);
     }
 }

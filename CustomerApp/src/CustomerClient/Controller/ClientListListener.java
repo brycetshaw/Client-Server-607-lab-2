@@ -1,10 +1,13 @@
 package CustomerClient.Controller;
 
+import CustomerClient.View.MainView;
 import CustomerModel.Customer;
 import CustomerClient.View.ClientInfoView;
 import CustomerClient.View.SearchClientView;
 
 import javax.swing.event.ListSelectionEvent;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * ClientListListener class and its instance methods and variables.
@@ -15,31 +18,18 @@ import javax.swing.event.ListSelectionEvent;
  * @since 2019/11/13
  */
 
-public class ClientListListener {
-    /**
-     * Panel containing GUI elements related to the form fields for a client.
-     */
-    private ClientInfoView clientInfoView;
-    /**
-     * Panel containing GUI elements related to displaying the search results to the user.
-     */
-    private SearchClientView searchClientView;
+public class ClientListListener extends BaseListener{
     /**
      * Boolean used to control when the list selection listener gets invoked.
      */
     private boolean isListPopulated;
 
-    /**
-     * This constructs the ClientListListener object and adds a listener to listen to a mouse click on a list object.
-     * @param clientInfoView
-     * @param searchClientView
-     */
-    public ClientListListener(ClientInfoView clientInfoView, SearchClientView searchClientView) {
-        this.clientInfoView = clientInfoView;
-        this.searchClientView = searchClientView;
+
+    public ClientListListener(MainView mainView, ObjectInputStream in, ObjectOutputStream out) {
+        super(mainView, in, out);
         isListPopulated = true;
 
-        this.searchClientView.addListListener(e-> {
+        this.mainView.getSearchClientView().addListListener(e-> {
             populateInfoFields(e);
         });
     }
@@ -50,15 +40,15 @@ public class ClientListListener {
      */
     private void populateInfoFields(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting() && isListPopulated == true){
-            int index = this.searchClientView.getResultArea().getSelectedIndex();
-            Customer client = (Customer) this.searchClientView.getListModel().getElementAt(index);
-            clientInfoView.getClientId().setText(String.valueOf(client.getId()));
-            clientInfoView.getFirstName().setText(client.getFirstName());
-            clientInfoView.getLastName().setText(client.getLastName());
-            clientInfoView.getAddress().setText(client.getAddress());
-            clientInfoView.getPostalCode().setText(client.getPostalCode());
-            clientInfoView.getPhoneNum().setText(client.getPhoneNumber());
-            clientInfoView.getClientType().setText(client.getCustomerType());
+            int index = mainView.getSearchClientView().getResultArea().getSelectedIndex();
+            Customer client = (Customer) mainView.getSearchClientView().getListModel().getElementAt(index);
+            mainView.getClientInfoView().getClientId().setText(String.valueOf(client.getId()));
+            mainView.getClientInfoView().getFirstName().setText(client.getFirstName());
+            mainView.getClientInfoView().getLastName().setText(client.getLastName());
+            mainView.getClientInfoView().getAddress().setText(client.getAddress());
+            mainView.getClientInfoView().getPostalCode().setText(client.getPostalCode());
+            mainView.getClientInfoView().getPhoneNum().setText(client.getPhoneNumber());
+            mainView.getClientInfoView().getClientType().setText(client.getCustomerType());
         }
     }
 

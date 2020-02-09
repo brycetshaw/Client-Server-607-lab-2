@@ -1,5 +1,6 @@
 package CustomerClient.Controller;
 
+import CustomerClient.View.MainView;
 import CustomerModel.Customer;
 import CustomerModel.CustomerDto;
 import CustomerClient.View.ClientInfoView;
@@ -21,67 +22,31 @@ import java.util.regex.Pattern;
  * @since 2019/11/13
  */
 
-public class SaveListener {
-    /**
-     * Main backend file related to reading/writing to the database.
-     */
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
-    /**
-     * Panel containing GUI elements related to the form fields for a client.
-     */
-    private ClientInfoView clientInfoView;
+public class SaveListener extends BaseListener {
     /**
      * Controller related to dealing with actions on the list element.
      */
     private ClientListListener clientListListener;
     /**
-     * Panel containing GUI elements related to displaying the search results to the user.
-     */
-    private SearchClientView searchClientView;
-    /**
      * Controller related to invoking the searching of a client in the backend.
      */
     private SearchListener searchListener;
 
-    /**
-     * This constructs the SaveListener object and adds a listener to listen to a mouse click on the save button.
-     * If the id field is empty, a new client will be added.  If an existing ID is used, the client info will be edited.
-     * Otherwise, gives an error to the user.
-     *
-     * @param clientInfoView
-     * @param clientListListener
-     * @param searchClientView
-     * @param searchListener
-     */
-    public SaveListener(ObjectOutputStream out, ObjectInputStream in, ClientInfoView clientInfoView,
-                        ClientListListener clientListListener, SearchClientView searchClientView, SearchListener searchListener) {
-        this.out = out;
-        this.in = in;
-        this.clientInfoView = clientInfoView;
+
+    public SaveListener(MainView mainView, ObjectInputStream in, ObjectOutputStream out, ClientListListener clientListListener, SearchListener searchListener) {
+        super(mainView, in, out);
         this.clientListListener = clientListListener;
-        this.searchClientView = searchClientView;
         this.searchListener = searchListener;
 
-        this.clientInfoView.addSaveListener(e -> {
+        this.mainView.getClientInfoView().addSaveListener(e -> {
             try {
                 if (checkValidFields()) {
-                    String Id = clientInfoView.getClientId().getText();
+                    String Id = mainView.getClientInfoView().getClientId().getText();
                     CustomerDto customerDto = new CustomerDto();
                     ArrayList<Customer> customers = new ArrayList<>();
                     customerDto.setCommand("POST");
                     Customer customer = new Customer();
-                    if (!Id.contentEquals("")) {
-                        customer.setId(Integer.parseInt(Id));
-                    } else {
-                        customer.setId(-1);
-                    }
-                    customer.setFirstName(clientInfoView.getFirstName().getText());
-                    customer.setLastName(clientInfoView.getLastName().getText());
-                    customer.setAddress(clientInfoView.getAddress().getText());
-                    customer.setPostalCode(clientInfoView.getPostalCode().getText());
-                    customer.setPhoneNumber(clientInfoView.getPhoneNum().getText());
-                    customer.setCustomerType(clientInfoView.getClientType().getText());
+                    setCustomerParams(mainView, Id, customer);
                     customers.add(customer);
                     customerDto.setCustomers(customers);
                     out.writeObject(customerDto);
@@ -89,23 +54,37 @@ public class SaveListener {
                     CustomerDto result = (CustomerDto) in.readObject();
                     if (result.getCommand().contentEquals("EDITSUCCESS")) {
                         searchListener.populateSearchResults(true);
-                        clientInfoView.showMessage("Edited Client info successfully saved!");
+                        mainView.getClientInfoView().showMessage("Edited Client info successfully saved!");
                         clearFields();
                     } else if (result.getCommand().contentEquals("CREATESUCCESS")) {
                         searchListener.populateSearchResults(true);
-                        clientInfoView.showMessage("Client successfully added!");
+                        mainView.getClientInfoView().showMessage("Client successfully added!");
                         clearFields();
                     } else if (result.getCommand().contentEquals("FAILURE")) {
-                        clientInfoView.showMessage("Client with ID: " + Id + " cannot be found.  Please ensure that the client info to be edited\n" +
-                            "has the correct ID or leave the ID field blank to create a new client");
+                        mainView.getClientInfoView().showMessage("Client with ID: " + Id + " cannot be found.  Please ensure that the client info to be edited\n" +
+                                "has the correct ID or leave the ID field blank to create a new client");
                     } else {
-                        clientInfoView.showMessage("Something wrong happened.  Please try again.");
+                        mainView.getClientInfoView().showMessage("Something wrong happened.  Please try again.");
                     }
                 }
             } catch (NumberFormatException | IOException | ClassNotFoundException ex) {
                 ex.printStackTrace();
             }
         });
+    }
+
+    private void setCustomerParams(MainView mainView, String id, Customer customer) {
+        if (!id.contentEquals("")) {
+            customer.setId(Integer.parseInt(id));
+        } else {
+            customer.setId(-1);
+        }
+        customer.setFirstName(mainView.getClientInfoView().getFirstName().getText());
+        customer.setLastName(mainView.getClientInfoView().getLastName().getText());
+        customer.setAddress(mainView.getClientInfoView().getAddress().getText());
+        customer.setPostalCode(mainView.getClientInfoView().getPostalCode().getText());
+        customer.setPhoneNumber(mainView.getClientInfoView().getPhoneNum().getText());
+        customer.setCustomerType(mainView.getClientInfoView().getClientType().getText());
     }
 
     /**
@@ -115,13 +94,14 @@ public class SaveListener {
      */
     private void clearFields() {
         clientListListener.setListPopulated(false);
-        searchClientView.getResultArea().clearSelection();
-        clientInfoView.clearFields();
+        mainView.getSearchClientView().getResultArea().clearSelection();
+        mainView.getClientInfoView().clearFields();
         clientListListener.setListPopulated(true);
     }
 
     /**
      * Checks if the fields are valid before adding or editing a client.
+     *
      * @return
      */
     private boolean checkValidFields() {
@@ -135,10 +115,11 @@ public class SaveListener {
 
     /**
      * Checks if the postal code entered is in the correct format and outputs an error message if not correct.
+     *
      * @return
      */
     private boolean checkPostalCode() {
-        String postalCode = clientInfoView.getPostalCode().getText();
+        String postalCode = mainView.getClientInfoView().getPostalCode().getText();
         String pattern = "^([A-Z]\\d[A-Z]) (\\d[A-Z]\\d)$";
         Pattern r = Pattern.compile(pattern);
         Matcher m = r.matcher(postalCode);
@@ -146,17 +127,18 @@ public class SaveListener {
         if (m.find() & postalCode.length() == 7) {
             return true;
         }
-        clientInfoView.showMessage("Postal code must be in the following format: A1A 1A1\n" +
+        mainView.getClientInfoView().showMessage("Postal code must be in the following format: A1A 1A1\n" +
                 "(A is a letter and 1 is a digit, with a space separating the third and fourth characters)");
         return false;
     }
 
     /**
      * Checks if the phone number entered is in the correct format and outputs an error message if not correct.
+     *
      * @return
      */
     private boolean checkPhoneNum() {
-        String phoneNum = clientInfoView.getPhoneNum().getText();
+        String phoneNum = mainView.getClientInfoView().getPhoneNum().getText();
         String pattern = "^(\\d\\d\\d)-(\\d\\d\\d)-(\\d\\d\\d\\d)$";
         Pattern r = Pattern.compile(pattern);
         Matcher m = r.matcher(phoneNum);
@@ -164,33 +146,35 @@ public class SaveListener {
         if (m.find() & phoneNum.length() == 12) {
             return true;
         }
-        clientInfoView.showMessage("Phone number must be in the following format: 111-111-1111\n" +
+        mainView.getClientInfoView().showMessage("Phone number must be in the following format: 111-111-1111\n" +
                 "(1 is a digit)");
         return false;
     }
 
     /**
      * Checks if the client type entered is in the correct format and outputs an error message if not correct.
+     *
      * @return
      */
     private boolean checkClientType() {
-        if (clientInfoView.getClientType().getText().contentEquals("C") || clientInfoView.getClientType().getText().contentEquals("R")) {
+        if (mainView.getClientInfoView().getClientType().getText().contentEquals("C") || mainView.getClientInfoView().getClientType().getText().contentEquals("R")) {
             return true;
         }
-        clientInfoView.showMessage("Client type must be either commercial (C) or residential (R)");
+        mainView.getClientInfoView().showMessage("Client type must be either commercial (C) or residential (R)");
         return false;
     }
 
     /**
      * Checks if the client first name entered is in the correct format and outputs an error message if not correct.
+     *
      * @return
      */
     private boolean checkFirstName() {
-        if (clientInfoView.getFirstName().getText().length() > 20) {
-            clientInfoView.showMessage("Can not have a first name greater than 20 characters");
+        if (mainView.getClientInfoView().getFirstName().getText().length() > 20) {
+            mainView.getClientInfoView().showMessage("Can not have a first name greater than 20 characters");
             return false;
-        } else if (clientInfoView.getFirstName().getText().length() == 0) {
-            clientInfoView.showMessage("Must have first name");
+        } else if (mainView.getClientInfoView().getFirstName().getText().length() == 0) {
+            mainView.getClientInfoView().showMessage("Must have first name");
             return false;
         }
         return true;
@@ -198,14 +182,15 @@ public class SaveListener {
 
     /**
      * Checks if the client last name entered is in the correct format and outputs an error message if not correct.
+     *
      * @return
      */
     private boolean checkLastName() {
-        if (clientInfoView.getLastName().getText().length() > 20) {
-            clientInfoView.showMessage("Can not have a last name greater than 20 characters");
+        if (mainView.getClientInfoView().getLastName().getText().length() > 20) {
+            mainView.getClientInfoView().showMessage("Can not have a last name greater than 20 characters");
             return false;
-        } else if (clientInfoView.getLastName().getText().length() == 0) {
-            clientInfoView.showMessage("Must have last name");
+        } else if (mainView.getClientInfoView().getLastName().getText().length() == 0) {
+            mainView.getClientInfoView().showMessage("Must have last name");
             return false;
         }
         return true;
@@ -213,14 +198,15 @@ public class SaveListener {
 
     /**
      * Checks if the address entered is in the correct format and outputs an error message if not correct.
+     *
      * @return
      */
     private boolean checkAddress() {
-        if (clientInfoView.getAddress().getText().length() > 50) {
-            clientInfoView.showMessage("Can not have an address greater than 50 characters");
+        if (mainView.getClientInfoView().getAddress().getText().length() > 50) {
+            mainView.getClientInfoView().showMessage("Can not have an address greater than 50 characters");
             return false;
-        } else if (clientInfoView.getAddress().getText().length() == 0) {
-            clientInfoView.showMessage("Must have an address");
+        } else if (mainView.getClientInfoView().getAddress().getText().length() == 0) {
+            mainView.getClientInfoView().showMessage("Must have an address");
             return false;
         }
         return true;

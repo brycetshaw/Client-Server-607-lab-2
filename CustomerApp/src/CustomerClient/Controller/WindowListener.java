@@ -9,17 +9,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class WindowListener {
-    private MainView mainView;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
-
+public class WindowListener extends BaseListener{
     public WindowListener(MainView mainView, ObjectInputStream in, ObjectOutputStream out) {
-        this.mainView = mainView;
-        this.in = in;
-        this.out = out;
+        super(mainView, in, out);
 
-        this.mainView.addWindowListener(new WindowAdapter(){
+        this.mainView.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 CustomerDto customerDto = new CustomerDto();

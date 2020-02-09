@@ -1,7 +1,11 @@
 package CustomerClient.Controller;
 
+import CustomerClient.View.MainView;
 import CustomerClient.View.SearchClientView;
 import CustomerClient.View.SearchCriteriaView;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * ClearSearchListener class and its instance methods and variables.
@@ -12,32 +16,17 @@ import CustomerClient.View.SearchCriteriaView;
  * @since 2019/11/13
  */
 
-public class ClearSearchListener {
+public class ClearSearchListener extends BaseListener {
     /**
      * Controller related to dealing with actions on the list element.
      */
     private ClientListListener clientListListener;
-    /**
-     * Panel containing GUI elements related to search criteria for clients.
-     */
-    private SearchCriteriaView searchCriteriaView;
-    /**
-     * Panel containing GUI elements related to the form fields for a client.
-     */
-    private SearchClientView clientView;
 
-    /**
-     * This constructs the ClearSearchListener object and adds a listener to listen to a mouse click on the clear button.
-     * @param searchCriteriaView
-     * @param clientView
-     * @param clientListListener
-     */
-    public ClearSearchListener(SearchCriteriaView searchCriteriaView, SearchClientView clientView, ClientListListener clientListListener) {
-        this.searchCriteriaView = searchCriteriaView;
-        this.clientView = clientView;
+    public ClearSearchListener(MainView mainView, ObjectInputStream in, ObjectOutputStream out, ClientListListener clientListListener) {
+        super(mainView, in, out);
         this.clientListListener = clientListListener;
 
-        this.searchCriteriaView.addClearSearchListener(e->{
+        this.mainView.getSearchCriteriaView().addClearSearchListener(e->{
             clearSearch();
         });
     }
@@ -49,8 +38,8 @@ public class ClearSearchListener {
      */
     public void clearSearch(){
         clientListListener.setListPopulated(false);
-        clientView.getListModel().removeAllElements();
-        searchCriteriaView.getSearchField().setText("");
-        searchCriteriaView.getButtonGroup().clearSelection();
+        mainView.getSearchClientView().getListModel().removeAllElements();
+        mainView.getSearchCriteriaView().getSearchField().setText("");
+        mainView.getSearchCriteriaView().getButtonGroup().clearSelection();
     }
 }
