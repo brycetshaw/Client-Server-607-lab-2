@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 /**
  * Customer class and its instance methods and variables.
+ * This class is the main model of the application.
  *
- * @author Michael Lee
+ * @author Michael Lee & Bryce Shaw
  * @version 1.0
- * @since 2019/11/13
+ * @since 2020/02/08
  */
-
 
 public class Customer implements Serializable {
 
@@ -17,8 +17,9 @@ public class Customer implements Serializable {
 
     /**
      * Class variable used to create a new id for a new client.
+     *
+     * @param id the id
      */
-
     public void setId(int id) {
         this.id = id;
     }
@@ -52,17 +53,21 @@ public class Customer implements Serializable {
      */
     private String customerType;
 
+    /**
+     * Instantiates a new Customer.
+     */
     public Customer () {}
 
     /**
      * Constructor to be used when fetching client information from the database.
-     * @param id
-     * @param firstName
-     * @param lastName
-     * @param address
-     * @param postalCode
-     * @param phoneNumber
-     * @param clientType
+     *
+     * @param id          the id
+     * @param firstName   the first name
+     * @param lastName    the last name
+     * @param address     the address
+     * @param postalCode  the postal code
+     * @param phoneNumber the phone number
+     * @param clientType  the client type
      */
     public Customer(int id, String firstName, String lastName, String address, String postalCode, String phoneNumber, String clientType) {
         this.id = id;
@@ -76,7 +81,8 @@ public class Customer implements Serializable {
 
     /**
      * Gets the Id of a client.
-     * @return
+     *
+     * @return id
      */
     public int getId() {
         return id;
@@ -84,7 +90,8 @@ public class Customer implements Serializable {
 
     /**
      * Gets the first name of a client.
-     * @return
+     *
+     * @return first name
      */
     public String getFirstName() {
         return firstName;
@@ -92,7 +99,8 @@ public class Customer implements Serializable {
 
     /**
      * Gets the last name of a client.
-     * @return
+     *
+     * @return last name
      */
     public String getLastName() {
         return lastName;
@@ -100,7 +108,8 @@ public class Customer implements Serializable {
 
     /**
      * Gets the address of a client.
-     * @return
+     *
+     * @return address
      */
     public String getAddress() {
         return address;
@@ -108,7 +117,8 @@ public class Customer implements Serializable {
 
     /**
      * Gets the postal code of a client.
-     * @return
+     *
+     * @return postal code
      */
     public String getPostalCode() {
         return postalCode;
@@ -116,7 +126,8 @@ public class Customer implements Serializable {
 
     /**
      * Gets the phone number of a client.
-     * @return
+     *
+     * @return phone number
      */
     public String getPhoneNumber() {
         return phoneNumber;
@@ -124,7 +135,8 @@ public class Customer implements Serializable {
 
     /**
      * Gets the client type of a client.
-     * @return
+     *
+     * @return customer type
      */
     public String getCustomerType() {
         return customerType;
@@ -141,7 +153,8 @@ public class Customer implements Serializable {
 
     /**
      * Sets the first name of a client to the one passed in as a parameter.
-     * @param firstName
+     *
+     * @param firstName the first name
      */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -149,7 +162,8 @@ public class Customer implements Serializable {
 
     /**
      * Sets the last name of a client to the one passed in as a parameter.
-     * @param lastName
+     *
+     * @param lastName the last name
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
@@ -157,7 +171,8 @@ public class Customer implements Serializable {
 
     /**
      * Sets the address of a client to the one passed in as a parameter.
-     * @param address
+     *
+     * @param address the address
      */
     public void setAddress(String address) {
         this.address = address;
@@ -165,7 +180,8 @@ public class Customer implements Serializable {
 
     /**
      * Sets the postal code of a client to the one passed in as a parameter.
-     * @param postalCode
+     *
+     * @param postalCode the postal code
      */
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
@@ -173,7 +189,8 @@ public class Customer implements Serializable {
 
     /**
      * Sets the phone number of a client to the one passed in as a parameter.
-     * @param phoneNumber
+     *
+     * @param phoneNumber the phone number
      */
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
@@ -181,7 +198,8 @@ public class Customer implements Serializable {
 
     /**
      * Sets the client type of a client to the one passed in as a parameter.
-     * @param customerType
+     *
+     * @param customerType the customer type
      */
     public void setCustomerType(String customerType) {
         this.customerType = customerType;

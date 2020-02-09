@@ -6,11 +6,10 @@ import java.awt.event.ActionListener;
 /**
  * SearchCriteriaView class and its instance methods and variables.
  *
- * @author Michael Lee
+ * @author Michael Lee & Bryce Shaw
  * @version 1.0
- * @since 2019/11/13
+ * @since 2020/02/08
  */
-
 
 public class SearchCriteriaView extends JPanel {
     /**
@@ -42,11 +41,32 @@ public class SearchCriteriaView extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         searchClientsTitle = new JLabel("Search Clients");
         add(searchClientsTitle);
+        createElements();
+        JPanel buttonPane = new JPanel();
+        addButtonsToButtonPane(buttonPane);
+        add(buttonPane);
+    }
+
+    private void createElements() {
         selectType = new JLabel("Select type of search to be performed:");
         add(selectType);
-
         buttonGroup = new ButtonGroup();
+        addButtonsToButtonGroup();
+        enterSearch = new JLabel("Enter the search parameter below:");
+        add(enterSearch);
+        searchField = new JTextField();
+        add(searchField);
+        searchButton = new JButton("Search");
+        clearSearchButton = new JButton("Clear Search");
+    }
 
+    private void addButtonsToButtonPane(JPanel buttonPane) {
+        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
+        buttonPane.add(searchButton);
+        buttonPane.add(clearSearchButton);
+    }
+
+    private void addButtonsToButtonGroup() {
         clientId = new JRadioButton("Client ID");
         lastName = new JRadioButton("Last Name");
         clientType = new JRadioButton("Client Type");
@@ -56,25 +76,12 @@ public class SearchCriteriaView extends JPanel {
         add(clientId);
         add(lastName);
         add(clientType);
-
-        enterSearch = new JLabel("Enter the search parameter below:");
-        add(enterSearch);
-
-        searchField = new JTextField();
-        add(searchField);
-
-        searchButton = new JButton("Search");
-        clearSearchButton = new JButton("Clear Search");
-        JPanel buttonPane = new JPanel();
-        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
-        buttonPane.add(searchButton);
-        buttonPane.add(clearSearchButton);
-        add(buttonPane);
     }
 
     /**
      * Adds an action listener to the search button.
-     * @param actionListener
+     *
+     * @param actionListener the action listener
      */
     public void addSearchListener(ActionListener actionListener) {
         searchButton.addActionListener(actionListener);
@@ -82,7 +89,8 @@ public class SearchCriteriaView extends JPanel {
 
     /**
      * Adds an action listener to the clear search button.
-     * @param actionListener
+     *
+     * @param actionListener the action listener
      */
     public void addClearSearchListener(ActionListener actionListener) {
         clearSearchButton.addActionListener(actionListener);
@@ -90,7 +98,8 @@ public class SearchCriteriaView extends JPanel {
 
     /**
      * Gets the clientId radio button.
-     * @return
+     *
+     * @return client id
      */
     public JRadioButton getClientId() {
         return clientId;
@@ -98,7 +107,8 @@ public class SearchCriteriaView extends JPanel {
 
     /**
      * Gets the lastName radio button.
-     * @return
+     *
+     * @return last name
      */
     public JRadioButton getLastName() {
         return lastName;
@@ -106,7 +116,8 @@ public class SearchCriteriaView extends JPanel {
 
     /**
      * Gets the clientType radio button.
-     * @return
+     *
+     * @return client type
      */
     public JRadioButton getClientType() {
         return clientType;
@@ -114,7 +125,8 @@ public class SearchCriteriaView extends JPanel {
 
     /**
      * Gets the search field object.
-     * @return
+     *
+     * @return search field
      */
     public JTextField getSearchField() {
         return searchField;
@@ -122,7 +134,8 @@ public class SearchCriteriaView extends JPanel {
 
     /**
      * Gets the radio button group.
-     * @return
+     *
+     * @return button group
      */
     public ButtonGroup getButtonGroup() {
         return buttonGroup;

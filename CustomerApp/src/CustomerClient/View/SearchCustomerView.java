@@ -5,14 +5,13 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
 /**
- * SearchClientView class and its instance methods and variables.
+ * SearchCustomerView class and its instance methods and variables.
  *
- * @author Michael Lee
+ * @author Michael Lee & Bryce Shaw
  * @version 1.0
- * @since 2019/11/13
+ * @since 2020 /02/08
  */
-
-public class SearchClientView extends JPanel{
+public class SearchCustomerView extends JPanel{
     /**
      * Label used to display the title of the panel.
      */
@@ -33,27 +32,41 @@ public class SearchClientView extends JPanel{
     /**
      * Constructs the GUI elements inside of this panel.
      */
-    public SearchClientView() {
+    public SearchCustomerView() {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        createTitleAndAddToPanel();
+        createList();
+        setResultArea();
+        addElements();
+    }
+
+    private void createTitleAndAddToPanel() {
         searchResultsTitle = new JLabel("Search Results");
         searchResultsTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+    }
 
-        listModel = new DefaultListModel();
-        resultArea = new JList(listModel);
-        scrollPane = new JScrollPane(resultArea);
-
+    private void setResultArea() {
         resultArea.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         resultArea.setLayoutOrientation(JList.VERTICAL);
         resultArea.setVisibleRowCount(10);
+    }
 
+    private void addElements() {
         add(searchResultsTitle);
         add(scrollPane);
     }
 
+    private void createList() {
+        listModel = new DefaultListModel();
+        resultArea = new JList(listModel);
+        scrollPane = new JScrollPane(resultArea);
+    }
+
     /**
      * Adds a listener to the list to listen for list selections.
-     * @param listSelectionListener
+     *
+     * @param listSelectionListener the list selection listener
      */
     public void addListListener(ListSelectionListener listSelectionListener){
         this.resultArea.getSelectionModel().addListSelectionListener(listSelectionListener);
@@ -61,7 +74,8 @@ public class SearchClientView extends JPanel{
 
     /**
      * Outputs a message box with a message to the user.
-     * @param message
+     *
+     * @param message the message
      */
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
@@ -69,7 +83,8 @@ public class SearchClientView extends JPanel{
 
     /**
      * Gets the list model inside of the JList object.
-     * @return
+     *
+     * @return list model
      */
     public DefaultListModel getListModel() {
         return listModel;
@@ -77,7 +92,8 @@ public class SearchClientView extends JPanel{
 
     /**
      * Gets the JList object.
-     * @return
+     *
+     * @return result area
      */
     public JList getResultArea() {
         return resultArea;

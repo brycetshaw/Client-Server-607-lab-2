@@ -6,20 +6,19 @@ import javax.swing.*;
  * MainView class and its instance methods and variables.
  * This class houses all the other panels in the GUI.
  *
- * @author Michael Lee
+ * @author Michael Lee & Bryce Shaw
  * @version 1.0
- * @since 2019/11/13
+ * @since 2020 /02/08
  */
-
 public class MainView extends JFrame {
     /**
      * Panel containing GUI elements related to displaying the search results to the user.
      */
-    private SearchClientView searchClientView;
+    private SearchCustomerView searchCustomerView;
     /**
      * Panel containing GUI elements related to the form fields for a client.
      */
-    private ClientInfoView clientInfoView;
+    private CustomerInfoView customerInfoView;
     /**
      * Panel containing GUI elements related to search criteria for clients.
      */
@@ -28,37 +27,64 @@ public class MainView extends JFrame {
     /**
      * Constructs the frame and assign panels that house all elements of the GUI.
      *
-     * @param searchClientView
-     * @param clientInfoView
-     * @param searchCriteriaView
+     * @param searchCustomerView the search customer view
+     * @param customerInfoView   the customer info view
+     * @param searchCriteriaView the search criteria view
      */
-    public MainView(SearchClientView searchClientView, ClientInfoView clientInfoView, SearchCriteriaView searchCriteriaView) {
+    public MainView(SearchCustomerView searchCustomerView, CustomerInfoView customerInfoView, SearchCriteriaView searchCriteriaView) {
         super("Client Management App");
-        this.searchClientView = searchClientView;
-        this.clientInfoView = clientInfoView;
+        this.searchCustomerView = searchCustomerView;
+        this.customerInfoView = customerInfoView;
         this.searchCriteriaView = searchCriteriaView;
 
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-        leftPanel.add(searchClientView);
-        leftPanel.add(searchCriteriaView);
+        JPanel leftPanel = addLeftPanel(searchCustomerView, searchCriteriaView);
+        JPanel rightPanel = addRightPanel(customerInfoView);
+        addSplitPane(leftPanel, rightPanel);
+    }
 
-        JPanel rightPanel = new JPanel();
-        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        rightPanel.add(clientInfoView);
-
+    private void addSplitPane(JPanel leftPanel, JPanel rightPanel) {
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
         add(splitPane);
     }
 
-    public SearchClientView getSearchClientView() {
-        return searchClientView;
+    private JPanel addRightPanel(CustomerInfoView customerInfoView) {
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        rightPanel.add(customerInfoView);
+        return rightPanel;
     }
 
-    public ClientInfoView getClientInfoView() {
-        return clientInfoView;
+    private JPanel addLeftPanel(SearchCustomerView searchCustomerView, SearchCriteriaView searchCriteriaView) {
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        leftPanel.add(searchCustomerView);
+        leftPanel.add(searchCriteriaView);
+        return leftPanel;
     }
 
+    /**
+     * Gets search customer view.
+     *
+     * @return the search customer view
+     */
+    public SearchCustomerView getSearchCustomerView() {
+        return searchCustomerView;
+    }
+
+    /**
+     * Gets customer info view.
+     *
+     * @return the customer info view
+     */
+    public CustomerInfoView getCustomerInfoView() {
+        return customerInfoView;
+    }
+
+    /**
+     * Gets search criteria view.
+     *
+     * @return the search criteria view
+     */
     public SearchCriteriaView getSearchCriteriaView() {
         return searchCriteriaView;
     }

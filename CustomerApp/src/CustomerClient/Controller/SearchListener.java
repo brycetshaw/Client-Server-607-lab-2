@@ -1,8 +1,6 @@
 package CustomerClient.Controller;
 
 import CustomerClient.View.MainView;
-import CustomerClient.View.SearchClientView;
-import CustomerClient.View.SearchCriteriaView;
 import CustomerModel.Customer;
 import CustomerModel.CustomerDto;
 
@@ -15,18 +13,25 @@ import java.util.ArrayList;
  * SearchListener class and its instance methods and variables.
  * This class is a controller for this app.
  *
- * @author Michael Lee
+ * @author Michael Lee & Bryce Shaw
  * @version 1.0
- * @since 2019/11/13
+ * @since 2020/02/08
  */
-
 public class SearchListener extends BaseListener{
 
-    private ClientListListener clientListListener;
+    private CustomerListListener customerListListener;
 
-    public SearchListener(MainView mainView, ObjectInputStream in, ObjectOutputStream out, ClientListListener clientListListener) {
+    /**
+     * Instantiates a new Search listener.
+     *
+     * @param mainView             the main view
+     * @param in                   the in
+     * @param out                  the out
+     * @param customerListListener the customer list listener
+     */
+    public SearchListener(MainView mainView, ObjectInputStream in, ObjectOutputStream out, CustomerListListener customerListListener) {
         super(mainView, in, out);
-        this.clientListListener = clientListListener;
+        this.customerListListener = customerListListener;
 
         this.mainView.getSearchCriteriaView().addSearchListener(e -> {
             try {
@@ -40,7 +45,10 @@ public class SearchListener extends BaseListener{
     /**
      * Searches for the client(s) based on the radio button selected and populates the list element with the results.
      *
-     * @param suppressMessages
+     * @param suppressMessages the suppress messages
+     * @throws IOException            the io exception
+     * @throws ClassNotFoundException the class not found exception
+     * @throws NumberFormatException  the number format exception
      */
     public void populateSearchResults(Boolean suppressMessages) throws IOException, ClassNotFoundException, NumberFormatException {
         clearPreviousResults();
@@ -62,13 +70,13 @@ public class SearchListener extends BaseListener{
             CustomerDto output = (CustomerDto) in.readObject();
             outputResponse(suppressMessages, output);
         } else {
-            mainView.getClientInfoView().showMessage("Please select an option");
+            mainView.getCustomerInfoView().showMessage("Please select an option");
         }
     }
 
     private void clearPreviousResults() {
-        clientListListener.setListPopulated(false);
-        mainView.getSearchClientView().getListModel().removeAllElements();
+        customerListListener.setListPopulated(false);
+        mainView.getSearchCustomerView().getListModel().removeAllElements();
     }
 
     private CustomerDto createIdDto(String searchCriteria) {
@@ -107,13 +115,13 @@ public class SearchListener extends BaseListener{
     private void outputResponse(Boolean suppressMessages, CustomerDto output) {
         if (output.getCommand().contentEquals("SUCCESS")) {
             for (Customer customer : output.getCustomers()) {
-                mainView.getSearchClientView().getListModel().addElement(customer);
+                mainView.getSearchCustomerView().getListModel().addElement(customer);
             }
-            clientListListener.setListPopulated(true);
+            customerListListener.setListPopulated(true);
         } else if (!suppressMessages && output.getCommand().contentEquals("FAILURE")) {
-            mainView.getSearchClientView().showMessage("No search results found with the entered parameters");
+            mainView.getSearchCustomerView().showMessage("No search results found with the entered parameters");
         } else {
-            mainView.getSearchClientView().showMessage("Something went wrong. Please try again");
+            mainView.getSearchCustomerView().showMessage("Something went wrong. Please try again");
         }
     }
 

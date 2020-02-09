@@ -8,8 +8,20 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * CustomerManager class and its instance methods and variables.
+ * This class reads and writes to the database.
+ *
+ * @author Michael Lee & Bryce Shaw
+ * @version 1.0
+ * @since 2020/02/08
+ */
+
 public class CustomerManager {
 
+    /**
+     * The Id generator.
+     */
     public IdGenerator idGenerator= new IdGenerator();
 
     /**
@@ -23,25 +35,30 @@ public class CustomerManager {
     /**
      * String objects designating the database name, table name, and file name.
      */
-    public String databaseName = "CustomerDB", tableName = "customerTable", dataFile = "customers.txt";
+    public String databaseName = "CustomerDB", /**
+     * The Table name.
+     */
+    tableName = "customerTable", /**
+     * The Data file.
+     */
+    dataFile = "customers.txt";
 
     /**
      * String objects used to login into MySql.
-     *
+     * <p>
      * NOTE: Should configure these variables for own MySQL environment
      * NOTE2: If you have not created your first database in mySQL yet, leave the
-     *        "[DATABASE NAME]" blank to get a connection and create one with the createDB() method.
+     * "[DATABASE NAME]" blank to get a connection and create one with the createDB() method.
      */
-
-    // This connection string is to connect to the RDS MySQL database
-//    public String connectionInfo = "jdbc:mysql://customerdatabase.cerypxhrqdnm.us-east-1.rds.amazonaws.com:3306/customerdb",
-//            login          = "admin",
-//            password       = "adminadmin";
+// This connection string is to connect to the RDS MySQL database
+    public String connectionInfo = "jdbc:mysql://customerdatabase.cerypxhrqdnm.us-east-1.rds.amazonaws.com:3306/customerdb",
+            login          = "admin",
+            password       = "adminadmin";
 
     // This connection string is to connect to the local MySQL database
-    public String connectionInfo = "jdbc:mysql://localhost:3306/customerdb",
-            login          = "root",
-            password       = "Computer,043";
+//    public String connectionInfo = "jdbc:mysql://localhost:3306/customerdb",
+//            login          = "root",
+//            password       = "Computer,043";
 
     /**
      * Constructs the ClientManager object and connect to the database.
@@ -177,7 +194,9 @@ public class CustomerManager {
 
     /**
      * Add a customer to the database table
-     * @param customer
+     *
+     * @param customer the customer
+     * @return the boolean
      */
     public boolean addItem(Customer customer)
     {
@@ -205,7 +224,9 @@ public class CustomerManager {
 
     /**
      * Update an existing client's info in the database table
-     * @param customer
+     *
+     * @param customer the customer
+     * @return the boolean
      */
     public boolean updateItem(Customer customer)
     {
@@ -232,7 +253,9 @@ public class CustomerManager {
 
     /**
      * Delete an existing client's info in the database table
-     * @param ID
+     *
+     * @param ID the id
+     * @return the boolean
      */
     public boolean deleteItem(int ID)
     {
@@ -254,8 +277,9 @@ public class CustomerManager {
     /**
      * This method should search the database table for a client matching the ID parameter and return that client.
      * It returns null if no clients matching that ID are found.
-     * @param customerID
-     * @return
+     *
+     * @param customerID the customer id
+     * @return array list
      */
     public ArrayList<Customer> searchCustomerId(String customerID)
     {
@@ -288,8 +312,9 @@ public class CustomerManager {
      * of clients.
      * It returns an empty array if no clients matching that last name are found and returns null if
      * the query failed.
-     * @param lastName
-     * @return
+     *
+     * @param lastName the last name
+     * @return array list
      */
     public ArrayList<Customer> searchCustomerLastName(String lastName)
     {
@@ -322,8 +347,9 @@ public class CustomerManager {
      * of customers.
      * It returns an empty array if no customers matching that customer type are found and returns null if
      * the query failed.
-     * @param customerType
-     * @return
+     *
+     * @param customerType the customer type
+     * @return array list
      */
     public ArrayList<Customer> searchCustomerType(String customerType)
     {

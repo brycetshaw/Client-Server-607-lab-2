@@ -4,14 +4,13 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 
 /**
- * ClientInfoView class and its instance methods and variables.
+ * CustomerInfoView class and its instance methods and variables.
  *
- * @author Michael Lee
+ * @author Michael Lee & Bryce Shaw
  * @version 1.0
- * @since 2019/11/13
+ * @since 2020 /02/08
  */
-
-public class ClientInfoView extends JPanel{
+public class CustomerInfoView extends JPanel{
     /**
      * Form fields used to allow users to add/edit client info.
      */
@@ -28,28 +27,32 @@ public class ClientInfoView extends JPanel{
     /**
      * Constructs the GUI elements inside of this panel.
      */
-    public ClientInfoView() {
+    public CustomerInfoView() {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         clientInfoTitle = new JLabel("Client Information");
         add(clientInfoTitle);
 
-        clientId = new JTextField(4);
-        firstName = new JTextField(20);
-        lastName = new JTextField(20);
-        address = new JTextField(50);
-        postalCode = new JTextField(7);
-        phoneNum = new JTextField(12);
-        clientType = new JTextField(1);
+        instantiateTextFields();
+        instantiateLabels();
+        addTextFieldsAndLabelsToFrame();
 
-        clientIdLabel = new JLabel("Client ID:");
-        firstNameLabel = new JLabel("First Name:");
-        lastNameLabel = new JLabel("Last Name:");
-        addressLabel = new JLabel("Address:");
-        postalCodeLabel = new JLabel("Postal Code:");
-        phoneNumLabel = new JLabel("Phone Number:");
-        clientTypeLabel = new JLabel("Client Type:");
+        JPanel buttonPane = new JPanel();
+        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
+        instantiateButtons(buttonPane);
+        add(buttonPane);
+    }
 
+    private void instantiateButtons(JPanel buttonPane) {
+        saveButton = new JButton("Save");
+        deleteButton = new JButton("Delete");
+        clearButton = new JButton("Clear");
+        buttonPane.add(saveButton);
+        buttonPane.add(deleteButton);
+        buttonPane.add(clearButton);
+    }
+
+    private void addTextFieldsAndLabelsToFrame() {
         JTextField tempFormArray[] = {clientId, firstName, lastName, address, postalCode, phoneNum, clientType};
         JLabel tempLabelArray[] = {clientIdLabel, firstNameLabel, lastNameLabel, addressLabel, postalCodeLabel, phoneNumLabel, clientTypeLabel};
 
@@ -60,21 +63,32 @@ public class ClientInfoView extends JPanel{
             tempPane.add(tempFormArray[i]);
             add(tempPane);
         }
+    }
 
-        JPanel buttonPane = new JPanel();
-        buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
-        saveButton = new JButton("Save");
-        deleteButton = new JButton("Delete");
-        clearButton = new JButton("Clear");
-        buttonPane.add(saveButton);
-        buttonPane.add(deleteButton);
-        buttonPane.add(clearButton);
-        add(buttonPane);
+    private void instantiateLabels() {
+        clientIdLabel = new JLabel("Client ID:");
+        firstNameLabel = new JLabel("First Name:");
+        lastNameLabel = new JLabel("Last Name:");
+        addressLabel = new JLabel("Address:");
+        postalCodeLabel = new JLabel("Postal Code:");
+        phoneNumLabel = new JLabel("Phone Number:");
+        clientTypeLabel = new JLabel("Client Type:");
+    }
+
+    private void instantiateTextFields() {
+        clientId = new JTextField(4);
+        firstName = new JTextField(20);
+        lastName = new JTextField(20);
+        address = new JTextField(50);
+        postalCode = new JTextField(7);
+        phoneNum = new JTextField(12);
+        clientType = new JTextField(1);
     }
 
     /**
      * Adds an action listener to the save button.
-     * @param actionListener
+     *
+     * @param actionListener the action listener
      */
     public void addSaveListener(ActionListener actionListener){
         saveButton.addActionListener(actionListener);
@@ -82,7 +96,8 @@ public class ClientInfoView extends JPanel{
 
     /**
      * Adds an action listener to the delete button.
-     * @param actionListener
+     *
+     * @param actionListener the action listener
      */
     public void addDeleteListener(ActionListener actionListener){
         deleteButton.addActionListener(actionListener);
@@ -90,7 +105,8 @@ public class ClientInfoView extends JPanel{
 
     /**
      * Adds an action listener to the clear button.
-     * @param actionListener
+     *
+     * @param actionListener the action listener
      */
     public void addClearListener(ActionListener actionListener){
         clearButton.addActionListener(actionListener);
@@ -98,7 +114,8 @@ public class ClientInfoView extends JPanel{
 
     /**
      * Shows a message to the user.
-     * @param message
+     *
+     * @param message the message
      */
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
@@ -106,7 +123,8 @@ public class ClientInfoView extends JPanel{
 
     /**
      * Gets the client Id text field.
-     * @return
+     *
+     * @return client id
      */
     public JTextField getClientId() {
         return clientId;
@@ -114,7 +132,8 @@ public class ClientInfoView extends JPanel{
 
     /**
      * Gets the first name text field.
-     * @return
+     *
+     * @return first name
      */
     public JTextField getFirstName() {
         return firstName;
@@ -122,7 +141,8 @@ public class ClientInfoView extends JPanel{
 
     /**
      * Gets the last name text field.
-     * @return
+     *
+     * @return last name
      */
     public JTextField getLastName() {
         return lastName;
@@ -130,7 +150,8 @@ public class ClientInfoView extends JPanel{
 
     /**
      * Gets the address text field.
-     * @return
+     *
+     * @return address address
      */
     public JTextField getAddress() {
         return address;
@@ -138,7 +159,8 @@ public class ClientInfoView extends JPanel{
 
     /**
      * Gets the postal code text field.
-     * @return
+     *
+     * @return postal code
      */
     public JTextField getPostalCode() {
         return postalCode;
@@ -146,7 +168,8 @@ public class ClientInfoView extends JPanel{
 
     /**
      * Gets the phone number text field.
-     * @return
+     *
+     * @return phone num
      */
     public JTextField getPhoneNum() {
         return phoneNum;
@@ -154,7 +177,8 @@ public class ClientInfoView extends JPanel{
 
     /**
      * Gets the client type text field.
-     * @return
+     *
+     * @return client type
      */
     public JTextField getClientType() {
         return clientType;
