@@ -78,21 +78,21 @@ public class View extends JFrame{
         buttons[i][j].addActionListener(actionListener);
     }
 
-    public void enableButtons(){
+    public void enableBoardButtons(Boolean val){
         for (int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++) {
-                buttons[i][j].setEnabled(true);
+                buttons[i][j].setEnabled(val);
             }
         }
     }
 
-    public void disableButtons(){
-        for (int i = 0; i < 3; i++){
-            for(int j = 0; j < 3; j++) {
-                buttons[i][j].setEnabled(false);
-            }
-        }
-    }
+//    public void disableButtons(){
+//        for (int i = 0; i < 3; i++){
+//            for(int j = 0; j < 3; j++) {
+//                buttons[i][j].setEnabled(false);
+//            }
+//        }
+//    }
 
     public void addNewGameListener( ActionListener actionListener) {
         newGame.addActionListener(actionListener);
@@ -135,5 +135,9 @@ public class View extends JFrame{
         this.messageArea = new JTextArea(st);
     }
 
+
+    public void setNewGame(Boolean val){
+        newGame.setEnabled(val);
+    }
 
 }
