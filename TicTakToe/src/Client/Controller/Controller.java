@@ -52,8 +52,12 @@ public class Controller {
                 //case where the board has no valid moves.
                 theView.close();
                 System.exit(0);
+
             }
 
+            if(!theBoard.isRunning()){
+                theView.enableBoardButtons(false);
+            }
 
             if (theBoard.getNeedsPlayers() && !theBoard.getxPlayer().equals(name)) {
                 //case where no players are in the game
@@ -65,9 +69,6 @@ public class Controller {
                 //this case shouldn't really exist
 
                 theBoard.setMessage("Waiting for the other player");
-            }  else {
-                //case where the game is proceeding normally
-                theView.enableBoardButtons(true);
             }
             theView.setMessage(Game.getMessage(theBoard, mark, name));
             theView.updateButtons(theBoard.getTheBoard());

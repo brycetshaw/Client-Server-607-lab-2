@@ -121,6 +121,10 @@ public class Game implements Constants {
     }
 
     public static String getMessage(Board theBoard, char mark, String name) {
+        if(!theBoard.isRunning()){
+            return theBoard.getMessage();
+        }
+
         String st = name + " playing as " + mark + "\n\n";
         if(mark == theBoard.getToPlay()){
             st += "It's your turn.\n\n";
@@ -128,13 +132,6 @@ public class Game implements Constants {
             st += "waiting for " + name(theBoard, getOpponent(mark))+ "\n\n";
         }
         st += theBoard.getMessage();
-//        if (theBoard.getToPlay() == mark) {
-//
-//            st += "It's your turn.";
-//        } else {
-//            st += "Waiting for " +
-//                    (getOpponent(mark));
-//        }
         return st;
     }
 }
