@@ -47,12 +47,13 @@ public class Controller implements Runnable {
 
 //                writeOut(theBoard, clientOutput2);
                 theBoard = (Board) readIn(clientInput1);
+                if(theBoard.isShutdown()) throw new IOException();
 
                 System.out.println("received from 1");
                 writeOut(theBoard, clientOutput2);
                 writeOut(theBoard, clientOutput1);
                 theBoard = (Board) readIn(clientInput2);
-
+                if(theBoard.isShutdown()) throw new IOException();
                 System.out.println("rec'd 2");
                 writeOut(theBoard, clientOutput1);
                 writeOut(theBoard, clientOutput2);
