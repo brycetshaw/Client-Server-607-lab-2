@@ -1,5 +1,7 @@
 package Client.View;
 
+import Client.Controller.Controller;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -11,11 +13,11 @@ public class View extends JFrame{
     BufferedReader stdIn;
 
     public JButton[][] buttons;
-    private JButton newGame;
-    private JLabel indicator;
+
     private JTextArea messageArea;
     private JPanel gamePanel;
     private JPanel messagePanel;
+    private ActionListener closeListener;
 
     public View(){
 
@@ -40,25 +42,26 @@ public class View extends JFrame{
         messagePanel.add(messageArea);
 //        add(gamePanel,BorderLayout.CENTER);
         add(messagePanel, BorderLayout.CENTER);
-        add(newGame, BorderLayout.SOUTH);
+
 //        pack();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(false);
 
-        stdIn = new BufferedReader(new InputStreamReader(System.in));
+
     }
 
     public String getName(){
         String name= JOptionPane.showInputDialog("What is your name?");
+        if (name == null){
+            close();
+        }
         return name;
     }
 
     private void initComponents(){
         initButtons();
-        this.indicator = new JLabel("X");
-        this.newGame = new JButton("New Game");
-        this.newGame.setEnabled(false);
+
     }
 
     private void initButtons(){
@@ -86,42 +89,13 @@ public class View extends JFrame{
         }
     }
 
-//    public void disableButtons(){
-//        for (int i = 0; i < 3; i++){
-//            for(int j = 0; j < 3; j++) {
-//                buttons[i][j].setEnabled(false);
-//            }
-//        }
-//    }
-
-    public void addNewGameListener( ActionListener actionListener) {
-        newGame.addActionListener(actionListener);
-    }
-
-    public void setMark(int i, int j, char mark) {
-        buttons[i][j].setText(Character.toString(mark));
-    }
 
 
     public void setMessage(String s) {
         messageArea.setText(s);
-        this.newGame.setEnabled(true);
     }
 
 
-    public String getResponse(){
-        System.out.println();
-        try {
-            return stdIn.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void sendRequest(String s) {
-        System.out.println(s);
-    }
 
     public void updateButtons(char[][] gameState){
         for(int i = 0; i < 3; i++) {
@@ -135,9 +109,8 @@ public class View extends JFrame{
         this.messageArea = new JTextArea(st);
     }
 
-
-    public void setNewGame(Boolean val){
-        newGame.setEnabled(val);
+    public void close() {
+        this.dispose();
+        System.exit(0);
     }
-
 }

@@ -5,10 +5,13 @@ import Client.View.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.Struct;
 
 public class Controller {
 
@@ -33,7 +36,6 @@ public class Controller {
     }
 
 
-
     private void listeningState() {
         while (true) {
 
@@ -43,33 +45,29 @@ public class Controller {
 
             theBoard = (Board) readIn(objectInputStream);
             System.out.println("recieved");
-            System.out.println(name );
+            System.out.println(name);
             System.out.println(theBoard.toString());
 
+            if (theBoard.isShutdown()) {
+                //case where the board has no valid moves.
+                theView.close();
+                System.exit(0);
+            }
 
 
-            if(theBoard.getNeedsPlayers() && !theBoard.getxPlayer().equals(name)){
+            if (theBoard.getNeedsPlayers() && !theBoard.getxPlayer().equals(name)) {
                 //case where no players are in the game
 
                 mark = Game.addPlayer(theBoard, name);
                 writeOut(theBoard, objectOutputStream);
-            } else if(theBoard.getNeedsPlayers() && theBoard.getxPlayer().equals(name)){
+            } else if (theBoard.getNeedsPlayers() && theBoard.getxPlayer().equals(name)) {
                 //case where the board is waiting for the other player.
                 //this case shouldn't really exist
 
                 theBoard.setMessage("Waiting for the other player");
-
-
-            }else if (!theBoard.isRunning()) {
-                //case where the board has no valid moves.
-                theView.enableBoardButtons(false);
-                theView.setNewGame(true);
-                System.out.println("there is a winner!");
-//                mark = Game.getOpponent(mark);
-            } else {
+            }  else {
                 //case where the game is proceeding normally
                 theView.enableBoardButtons(true);
-                theView.setNewGame(false);
             }
             theView.setMessage(Game.getMessage(theBoard, mark, name));
             theView.updateButtons(theBoard.getTheBoard());
@@ -87,13 +85,13 @@ public class Controller {
         public void actionPerformed(ActionEvent actionEvent) {
 
             String response = actionEvent.getActionCommand();
-            System.out.println(mark + " plays " +response);
+            System.out.println(mark + " plays " + response);
             int[] move = {Integer.parseInt(response.substring(0, 1)), Integer.parseInt(response.substring(2))};
 
             if (Game.moveIsValid(theBoard, move) && theBoard.getToPlay() == mark) {
                 Game.makeMove(theBoard, mark, move);
 
-                if(!theBoard.isRunning()){
+                if (!theBoard.isRunning()) {
                     gameIsWon();
                 }
                 sendResponse();
@@ -101,15 +99,17 @@ public class Controller {
         }
     }
 
-    private class newGameListener implements ActionListener {
+    private class closeListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
-            theBoard.reset();
+            theBoard.setShutdown(true);
             sendResponse();
+            System.exit(0);
         }
     }
 
-    private void gameIsWon(){
+
+    private void gameIsWon() {
         System.out.println("game is won!");
     }
 
@@ -131,9 +131,6 @@ public class Controller {
     }
 
     private void addButtonListeners() {
-        Controller.newGameListener newGameListener = new Controller.newGameListener();
-        theView.addNewGameListener(newGameListener);
-        theView.setNewGame(false);
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {

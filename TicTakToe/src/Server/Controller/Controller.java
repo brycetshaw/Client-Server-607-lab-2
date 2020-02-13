@@ -60,7 +60,21 @@ public class Controller implements Runnable {
 
             }
         } catch (ClassNotFoundException | IOException e) {
+            theBoard.setShutdown(true);
+            try {
+                System.out.println("try to shutdown 2");
+                writeOut(theBoard, clientOutput2);
+            } catch (IOException ex) {
+                try {
+                    System.out.println("try to shutdown 1");
+                    writeOut(theBoard, clientOutput1);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+
             e.printStackTrace();
+
         }
     }
 

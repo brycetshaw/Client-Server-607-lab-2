@@ -13,16 +13,16 @@ public class Board implements Serializable, Constants {
     private boolean isRunning;
     private String message;
     private String gameState;
-    private boolean newGame;
+    private boolean isShutdown;
     private boolean needsPlayers;
 
 
-    public boolean isNewGame() {
-        return newGame;
+    public boolean isShutdown() {
+        return isShutdown;
     }
 
-    public void setNewGame(boolean newGame) {
-        this.newGame = newGame;
+    public void setShutdown(boolean isShutdown) {
+        this.isShutdown = isShutdown;
     }
 
     public Board(){
@@ -38,7 +38,7 @@ public class Board implements Serializable, Constants {
         xPlayer = "";
         yPlayer = "";
         count = 0;
-        newGame = false;
+        isShutdown = false;
         needsPlayers = true;
     }
 
@@ -113,22 +113,6 @@ public class Board implements Serializable, Constants {
 
     public int getCount(){return count;}
 
-    public void reset(){
-        for(int i = 0; i < 3; i++){
-            for(int j = 0; j < 3 ; j++){
-                theBoard[i][j] = Constants.SPACE_CHAR;
-            }
-        }
-        count = 0;
-        toPlay = Constants.LETTER_X;
-        isRunning = true;
-        message = "New day, new you";
-
-//        String temp = xPlayer;
-//        xPlayer = yPlayer;
-//        yPlayer = temp;
-//        needsPlayers = true;
-    }
 
 
     public boolean getNeedsPlayers() {
