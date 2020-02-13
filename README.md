@@ -3,10 +3,7 @@
 ## authors: Bryce Shaw, Michael Lee
 
 ### Complete Parts:
-- ex-1
-- ex-2
-- ex-3
-- ex-6/part-1 -> FinalClientManagementSystem.png
+- Everythin
 
 ### Incomplete parts:
-- Everything else
+- nothing.
