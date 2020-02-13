@@ -6,6 +6,8 @@ import Server.Controller.*;
 
 
 import java.io.*;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -21,7 +23,8 @@ public class Server {
 
     public Server(int port) {
         try {
-            serverSocket = new ServerSocket(port);
+//            InetAddress address = Inet4Address.getByName("3.87.99.9");
+            serverSocket = new ServerSocket(  port);
             pool = Executors.newFixedThreadPool(2);
             System.out.println("Tic Tack Toe Server is running on port: " + port);
 
@@ -33,6 +36,7 @@ public class Server {
 
     public static void main(String[] args) {
         Server server = new Server(9091);
+
         server.runServer();
     }
 

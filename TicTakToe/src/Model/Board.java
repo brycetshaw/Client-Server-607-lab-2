@@ -6,12 +6,24 @@ public class Board implements Serializable, Constants {
 
     public static final long serialVersionUID = 4L;
     private char[][] theBoard = new char[3][3];
+    private int count;
     private String xPlayer;
     private String yPlayer;
     private char toPlay;
     private boolean isRunning;
     private String message;
+    private String gameState;
+    private boolean isShutdown;
+    private boolean needsPlayers;
 
+
+    public boolean isShutdown() {
+        return isShutdown;
+    }
+
+    public void setShutdown(boolean isShutdown) {
+        this.isShutdown = isShutdown;
+    }
 
     public Board(){
         theBoard = new char[3][3];
@@ -23,6 +35,30 @@ public class Board implements Serializable, Constants {
         toPlay = Constants.LETTER_X;
         isRunning = true;
         message = "waiting for players to join";
+        xPlayer = "";
+        yPlayer = "";
+        count = 0;
+        isShutdown = false;
+        needsPlayers = true;
+    }
+
+    public String toString(){
+        String st = "";
+
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                st += theBoard[i][j];
+            }
+            st += "\n";
+        }
+        st += "----";
+        st += "\nx player: " + xPlayer;
+        st += "\no player: " +yPlayer;
+        st += "\nto play: " + toPlay;
+        st += "\nrunning: " + isRunning;
+        st += "\n count: "+ count;
+        st += "\n message: " + message;
+        return st;
     }
 
 
@@ -31,6 +67,7 @@ public class Board implements Serializable, Constants {
     }
 
     public void setTheBoard(char[][] theBoard) {
+        count++;
         this.theBoard = theBoard;
     }
 
@@ -72,5 +109,17 @@ public class Board implements Serializable, Constants {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getCount(){return count;}
+
+
+
+    public boolean getNeedsPlayers() {
+        return needsPlayers;
+    }
+
+    public void setNeedsPlayers(boolean b) {
+        needsPlayers = b;
     }
 }

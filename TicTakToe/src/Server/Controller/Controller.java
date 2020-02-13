@@ -4,6 +4,8 @@ import Model.Board;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Controller implements Runnable {
 
@@ -13,49 +15,69 @@ public class Controller implements Runnable {
     private ObjectOutputStream clientOutput2;
     private ObjectInputStream clientInput2;
 
-
-    private String name;
     private Socket player1;
     private Socket player2;
-    private Board theBoard;
-    private char mark;
+
+    private ExecutorService pool;
 
     public Controller(Socket clientSocket1, Socket clientSocket2) {
-
         this.player1 = clientSocket1;
         this.player2 = clientSocket2;
+        pool = Executors.newFixedThreadPool(2);
     }
 
 
     @Override
     public void run() {
-
         setObjectStreams();
-        play();
-
+        startTheGame();
     }
 
-    private void play() {
+    private void startTheGame() {
         Board theBoard = new Board();
 
         try {
-            while (theBoard.isRunning()) {
-
-                writeOut(theBoard, clientOutput1);
-                theBoard = (Board) readIn(clientInput1);
-                writeOut(theBoard, clientOutput2);
-                theBoard = (Board) readIn(clientInput2);
-            }
             writeOut(theBoard, clientOutput1);
+            theBoard = (Board) readIn(clientInput1);
             writeOut(theBoard, clientOutput2);
+            theBoard = (Board) readIn(clientInput2);
+            writeOut(theBoard, clientOutput1);
 
-        } catch (IOException e) {
+            while (true) {
+
+//                writeOut(theBoard, clientOutput2);
+                theBoard = (Board) readIn(clientInput1);
+
+                System.out.println("received from 1");
+                writeOut(theBoard, clientOutput2);
+                writeOut(theBoard, clientOutput1);
+                theBoard = (Board) readIn(clientInput2);
+
+                System.out.println("rec'd 2");
+                writeOut(theBoard, clientOutput1);
+                writeOut(theBoard, clientOutput2);
+                System.out.println("wrote to 1");
+
+            }
+        } catch (ClassNotFoundException | IOException e) {
+            theBoard.setShutdown(true);
+            try {
+                System.out.println("try to shutdown 2");
+                writeOut(theBoard, clientOutput2);
+            } catch (IOException ex) {
+                try {
+                    System.out.println("try to shutdown 1");
+                    writeOut(theBoard, clientOutput1);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+            }
+
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+
         }
-
     }
+
 
     private void setObjectStreams() {
         try {
