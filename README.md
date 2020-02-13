@@ -3,7 +3,7 @@
 ## authors: Bryce Shaw, Michael Lee
 
 ### Complete Parts:
-- Everythin
+- Everything
 
 ### Incomplete parts:
 - nothing.
