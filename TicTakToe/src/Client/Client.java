@@ -27,10 +27,9 @@ public class Client {
         boolean hasConnected = false;
         while (!hasConnected) {
             try {
-//                Client aClient = new Client("3.87.99.9", 9091);
-                Client aClient = new Client("localhost", 9091);
-                hasConnected = true;
-            } catch (IOException e) {
+                Client aClient = new Client("3.87.99.9", 9090);
+//                Client aClient = new Client("localhost", 9090);
+             } catch (IOException e) {
                 System.out.println("Connection Failed. Retrying connection in 2s");
                 try {
                     Thread.sleep(2000);
